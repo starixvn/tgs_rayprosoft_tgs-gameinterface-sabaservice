@@ -27,19 +27,15 @@ namespace Tgs.GameInterface.SabaService.Controllers
             var Namespace = _configuration.GetSection("GameInterface:Namespace").Value;
             return new
             {
-                Data = new
-                {
-                    MachineName = Environment.MachineName,
-                    HostName = hostName,
-                    HostIp = hostIp?.ToString() ?? string.Empty,
-                    EnvironmentName = environment.EnvironmentName,
-                    IsDevelopment = environment.IsDevelopment(),
-                    IsProduction = environment.IsProduction(),
-                    OsVersion = $"{Environment.OSVersion}",
-                    Version = Assembly.GetExecutingAssembly().GetName().Version?.ToString(),
-                    ProcessCount = Environment.ProcessorCount,
-                    Namespace = Namespace
-                }
+                MachineName = Environment.MachineName,
+                HostName = hostName,
+                HostIp = hostIp?.ToString() ?? string.Empty,
+                EnvironmentName = environment.EnvironmentName,
+                IsDevelopment = environment.IsDevelopment(),
+                IsProduction = environment.IsProduction(),
+                OsVersion = $"{Environment.OSVersion}",
+                Version = Assembly.GetExecutingAssembly().GetName().Version?.ToString(),
+                ProcessCount = Environment.ProcessorCount
             };
         }
     }
