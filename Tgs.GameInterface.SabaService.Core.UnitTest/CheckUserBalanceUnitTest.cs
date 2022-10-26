@@ -1,6 +1,6 @@
+using System.Net;
 using Microsoft.Extensions.Logging.Abstractions;
 using RichardSzalay.MockHttp;
-using System.Net;
 using Tgs.GameInterface.SabaService.Core.Exceptions;
 
 namespace Tgs.GameInterface.SabaService.Core.UnitTest;

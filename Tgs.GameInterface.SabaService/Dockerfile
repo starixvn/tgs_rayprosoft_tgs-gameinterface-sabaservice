@@ -10,6 +10,7 @@ ARG BuildConfiguration=Release
 WORKDIR /src
 COPY ["nuget.config", "."]
 COPY ["Tgs.GameInterface.SabaService/Tgs.GameInterface.SabaService.csproj", "Tgs.GameInterface.SabaService/"]
+COPY ["Tgs.GameInterface.SabaService.Core/Tgs.GameInterface.SabaService.Core.csproj", "Tgs.GameInterface.SabaService.Core/"]
 RUN dotnet restore "Tgs.GameInterface.SabaService/Tgs.GameInterface.SabaService.csproj"
 COPY . .
 WORKDIR "/src/Tgs.GameInterface.SabaService"
