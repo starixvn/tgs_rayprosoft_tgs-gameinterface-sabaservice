@@ -9,7 +9,7 @@ namespace Tgs.GameInterface.SabaService.Core.UnitTest;
 public class CreateMemberUnitTest
 {
     [TestMethod]
-    public async Task 玩家已經存在()
+    public async Task Player_Already_Exists()
     {
         var apiUrl = new Uri("http://h0i2tsa.bw6688.com/");
         var vendorId = "kwmmuz6qqi";
@@ -49,7 +49,7 @@ public class CreateMemberUnitTest
     }
 
     [TestMethod]
-    public async Task 創建玩家成功()
+    public async Task Normal_Process()
     {
         var apiUrl = new Uri("http://h0i2tsa.bw6688.com/");
         var vendorId = "kwmmuz6qqi";
@@ -89,7 +89,7 @@ public class CreateMemberUnitTest
     }
 
     [TestMethod]
-    public async Task 其他錯誤()
+    public async Task Other_Errors()
     {
         var apiUrl = new Uri("http://h0i2tsa.bw6688.com/");
         var vendorId = "kwmmuz6qqi";

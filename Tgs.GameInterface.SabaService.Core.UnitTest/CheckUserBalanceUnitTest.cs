@@ -9,7 +9,7 @@ namespace Tgs.GameInterface.SabaService.Core.UnitTest;
 public class CheckUserBalanceUnitTest
 {
     [TestMethod]
-    public async Task 玩家不存在()
+    public async Task Player_Does_Not_Exist()
     {
         var apiUrl = new Uri("http://h0i2tsa.bw6688.com/");
         var vendorId = "kwmmuz6qqi";
@@ -40,7 +40,7 @@ public class CheckUserBalanceUnitTest
     }
 
     [TestMethod]
-    public async Task 取得餘額()
+    public async Task Normal_Process()
     {
         var apiUrl = new Uri("http://h0i2tsa.bw6688.com/");
         var vendorId = "kwmmuz6qqi";
@@ -72,7 +72,7 @@ public class CheckUserBalanceUnitTest
     }
 
     [TestMethod]
-    public async Task 其他錯誤()
+    public async Task Other_Errors()
     {
         var apiUrl = new Uri("http://h0i2tsa.bw6688.com/");
         var vendorId = "kwmmuz6qqi";
