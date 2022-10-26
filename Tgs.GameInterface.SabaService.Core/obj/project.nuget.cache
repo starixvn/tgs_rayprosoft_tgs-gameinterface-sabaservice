@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "D/herz/dJkqLE4lLD75/QFCZko2OmHJa7hf5egvsmwDsvlfL5fOJ7zllyUG7wPxUKWYNw+VyeIrygLRIKyCJ1A==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\User\\source\\repos\\Tgs.GameInterface.SabaService\\Tgs.GameInterface.SabaService.Core\\Tgs.GameInterface.SabaService.Core.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\User\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\6.0.2\\microsoft.extensions.logging.abstractions.6.0.2.nupkg.sha512"
+  ],
+  "logs": []
+}

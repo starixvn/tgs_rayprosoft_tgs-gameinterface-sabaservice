@@ -1,0 +1,12 @@
+C:\Users\User\source\repos\Tgs.GameInterface.SabaService\Tgs.GameInterface.SabaService.Core\bin\Debug\net6.0\Tgs.GameInterface.SabaService.Core.deps.json
+C:\Users\User\source\repos\Tgs.GameInterface.SabaService\Tgs.GameInterface.SabaService.Core\bin\Debug\net6.0\Tgs.GameInterface.SabaService.Core.dll
+C:\Users\User\source\repos\Tgs.GameInterface.SabaService\Tgs.GameInterface.SabaService.Core\bin\Debug\net6.0\Tgs.GameInterface.SabaService.Core.pdb
+C:\Users\User\source\repos\Tgs.GameInterface.SabaService\Tgs.GameInterface.SabaService.Core\obj\Debug\net6.0\Tgs.GameInterface.SabaService.Core.csproj.AssemblyReference.cache
+C:\Users\User\source\repos\Tgs.GameInterface.SabaService\Tgs.GameInterface.SabaService.Core\obj\Debug\net6.0\Tgs.GameInterface.SabaService.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\User\source\repos\Tgs.GameInterface.SabaService\Tgs.GameInterface.SabaService.Core\obj\Debug\net6.0\Tgs.GameInterface.SabaService.Core.AssemblyInfoInputs.cache
+C:\Users\User\source\repos\Tgs.GameInterface.SabaService\Tgs.GameInterface.SabaService.Core\obj\Debug\net6.0\Tgs.GameInterface.SabaService.Core.AssemblyInfo.cs
+C:\Users\User\source\repos\Tgs.GameInterface.SabaService\Tgs.GameInterface.SabaService.Core\obj\Debug\net6.0\Tgs.GameInterface.SabaService.Core.csproj.CoreCompileInputs.cache
+C:\Users\User\source\repos\Tgs.GameInterface.SabaService\Tgs.GameInterface.SabaService.Core\obj\Debug\net6.0\Tgs.GameInterface.SabaService.Core.dll
+C:\Users\User\source\repos\Tgs.GameInterface.SabaService\Tgs.GameInterface.SabaService.Core\obj\Debug\net6.0\refint\Tgs.GameInterface.SabaService.Core.dll
+C:\Users\User\source\repos\Tgs.GameInterface.SabaService\Tgs.GameInterface.SabaService.Core\obj\Debug\net6.0\Tgs.GameInterface.SabaService.Core.pdb
+C:\Users\User\source\repos\Tgs.GameInterface.SabaService\Tgs.GameInterface.SabaService.Core\obj\Debug\net6.0\ref\Tgs.GameInterface.SabaService.Core.dll
