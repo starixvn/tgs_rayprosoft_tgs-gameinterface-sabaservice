@@ -9,6 +9,13 @@ namespace Tgs.GameInterface.SabaService.Controllers
     [ApiController]
     public class InfoController : ControllerBase
     {
+        private readonly IConfiguration _configuration;
+
+        public InfoController(IConfiguration configuration)
+        {
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+        }
+
         [HttpGet]
         public async ValueTask<object> Get([FromServices] IWebHostEnvironment environment)
         {
@@ -16,6 +23,8 @@ namespace Tgs.GameInterface.SabaService.Controllers
             var hostEntry = await Dns.GetHostEntryAsync(hostName);
             var hostIp = Array.Find(hostEntry.AddressList,
                 x => x.AddressFamily == AddressFamily.InterNetwork);
+
+            var Namespace = _configuration.GetSection("GameInterface:Namespace").Value;
             return new
             {
                 Data = new
@@ -28,7 +37,8 @@ namespace Tgs.GameInterface.SabaService.Controllers
                     IsProduction = environment.IsProduction(),
                     OsVersion = $"{Environment.OSVersion}",
                     Version = Assembly.GetExecutingAssembly().GetName().Version?.ToString(),
-                    ProcessCount = Environment.ProcessorCount
+                    ProcessCount = Environment.ProcessorCount,
+                    Namespace = Namespace
                 }
             };
         }

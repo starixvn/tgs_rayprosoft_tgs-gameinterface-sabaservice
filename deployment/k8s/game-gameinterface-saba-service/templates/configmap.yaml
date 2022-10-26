@@ -20,6 +20,9 @@ data:
                 "Url": "http://*:{{ .Values.servicegrpc.port }}"
             }
           }
+        },
+        "GameInterface": {
+          "Namespace": "{{ .Release.Namespace }}"
         }
     }
   monitor.settings.json: |
