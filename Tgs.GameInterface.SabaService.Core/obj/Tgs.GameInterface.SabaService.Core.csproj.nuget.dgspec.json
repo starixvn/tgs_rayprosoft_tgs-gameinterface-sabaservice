@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\User\\source\\repos\\Tgs.GameInterface.SabaService\\Tgs.GameInterface.SabaService.Core\\Tgs.GameInterface.SabaService.Core.csproj": {}
+    "D:\\00.Git\\game-saba\\tgs-gameinterface-sabaservice\\Tgs.GameInterface.SabaService.Core\\Tgs.GameInterface.SabaService.Core.csproj": {}
   },
   "projects": {
-    "C:\\Users\\User\\source\\repos\\Tgs.GameInterface.SabaService\\Tgs.GameInterface.SabaService.Core\\Tgs.GameInterface.SabaService.Core.csproj": {
+    "D:\\00.Git\\game-saba\\tgs-gameinterface-sabaservice\\Tgs.GameInterface.SabaService.Core\\Tgs.GameInterface.SabaService.Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\User\\source\\repos\\Tgs.GameInterface.SabaService\\Tgs.GameInterface.SabaService.Core\\Tgs.GameInterface.SabaService.Core.csproj",
+        "projectUniqueName": "D:\\00.Git\\game-saba\\tgs-gameinterface-sabaservice\\Tgs.GameInterface.SabaService.Core\\Tgs.GameInterface.SabaService.Core.csproj",
         "projectName": "Tgs.GameInterface.SabaService.Core",
-        "projectPath": "C:\\Users\\User\\source\\repos\\Tgs.GameInterface.SabaService\\Tgs.GameInterface.SabaService.Core\\Tgs.GameInterface.SabaService.Core.csproj",
+        "projectPath": "D:\\00.Git\\game-saba\\tgs-gameinterface-sabaservice\\Tgs.GameInterface.SabaService.Core\\Tgs.GameInterface.SabaService.Core.csproj",
         "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\User\\source\\repos\\Tgs.GameInterface.SabaService\\Tgs.GameInterface.SabaService.Core\\obj\\",
+        "outputPath": "D:\\00.Git\\game-saba\\tgs-gameinterface-sabaservice\\Tgs.GameInterface.SabaService.Core\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\User\\source\\repos\\Tgs.GameInterface.SabaService\\NuGet.Config",
+          "D:\\00.Git\\game-saba\\tgs-gameinterface-sabaservice\\NuGet.Config",
           "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],

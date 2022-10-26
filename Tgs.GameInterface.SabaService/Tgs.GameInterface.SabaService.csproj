@@ -13,4 +13,8 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Tgs.GameInterface.SabaService.Core\Tgs.GameInterface.SabaService.Core.csproj" />
+  </ItemGroup>
+
 </Project>
