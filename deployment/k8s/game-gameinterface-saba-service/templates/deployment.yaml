@@ -38,7 +38,7 @@ spec:
           env:
             - name: OTEL_SERVICE_NAME
               value: Game-GameInterface-Saba-Service({{ .Release.Namespace }})
-            - name: ASPNETCORE_ENVIRONMENT
+            - name: RELEASE_NAMESPACE
               value: {{ .Release.Namespace }}
             - name: NODE_IP
               valueFrom:

@@ -2,6 +2,8 @@
 using System.Net.Sockets;
 using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Tgs.GameInterface.SabaService.Core;
 
 namespace Tgs.GameInterface.SabaService.Controllers
 {
@@ -9,11 +11,11 @@ namespace Tgs.GameInterface.SabaService.Controllers
     [ApiController]
     public class InfoController : ControllerBase
     {
-        private readonly IConfiguration _configuration;
+        private readonly GameInterfaceSettingsOptions _gameInterfaceSettings;
 
-        public InfoController(IConfiguration configuration)
+        public InfoController(IOptions<GameInterfaceSettingsOptions> options)
         {
-            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            _gameInterfaceSettings = options.Value;
         }
 
         [HttpGet]
@@ -24,7 +26,6 @@ namespace Tgs.GameInterface.SabaService.Controllers
             var hostIp = Array.Find(hostEntry.AddressList,
                 x => x.AddressFamily == AddressFamily.InterNetwork);
 
-            var Namespace = _configuration.GetSection("GameInterface:Namespace").Value;
             return new
             {
                 MachineName = Environment.MachineName,
@@ -35,7 +36,8 @@ namespace Tgs.GameInterface.SabaService.Controllers
                 IsProduction = environment.IsProduction(),
                 OsVersion = $"{Environment.OSVersion}",
                 Version = Assembly.GetExecutingAssembly().GetName().Version?.ToString(),
-                ProcessCount = Environment.ProcessorCount
+                ProcessCount = Environment.ProcessorCount,
+                ReleaseNamespace = _gameInterfaceSettings.ReleaseNamespace
             };
         }
     }
