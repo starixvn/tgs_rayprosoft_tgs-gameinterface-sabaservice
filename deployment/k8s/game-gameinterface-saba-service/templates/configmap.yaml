@@ -22,7 +22,7 @@ data:
           }
         },
         "GameInterface": {
-          "Namespace": "{{ .Values.namespace }}"
+          "Namespace": "{{ .Release.Namespace }}"
         }
     }
   monitor.settings.json: |
