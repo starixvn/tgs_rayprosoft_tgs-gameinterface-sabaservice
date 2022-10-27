@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Options;
 using Tgs.GameInterface.SabaService.Core;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,7 +19,6 @@ builder.Services
 
 builder.Services
     .AddHealthChecks();
-
 
 var app = builder.Build();
 

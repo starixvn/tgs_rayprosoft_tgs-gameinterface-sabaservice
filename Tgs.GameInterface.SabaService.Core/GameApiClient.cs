@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
-using System.Net.Mime;
-using System.Text;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Microsoft.Extensions.Logging;
@@ -28,44 +27,57 @@ internal class GameApiClient : IGameApiClient
         };
     }
 
-    public async ValueTask<bool> CheckFundTransferAsync(
+    public async ValueTask<CheckFundTransferResult> CheckFundTransferAsync(
         Uri apiUrl,
         string vendorId,
         string vendorTransId,
         GameWalletType walletType,
         CancellationToken cancellationToken = default)
     {
-        JsonObject request = new JsonObject
+        var parameters = new Dictionary<string, string>
         {
-            { "vendor_id",vendorId },
-            { "vendor_trans_id", vendorTransId },
-             { "wallet_id ", (int)walletType }
+            ["vendor_id"] = vendorId,
+            ["vendor_trans_id"] = vendorTransId,
+            ["wallet_id"] = ((int)walletType).ToString()
         };
 
         var url = new Uri(apiUrl, "/api/CheckFundTransfer/");
 
         var jsonNode = await PostAsync(
                 url,
-                request,
+                parameters,
                 "CheckFundTransfer",
                 cancellationToken)
             .ConfigureAwait(false);
 
-        if (jsonNode["error_code"]?.GetValue<int>() is null or not 0)
+        if (jsonNode["error_code"]?.GetValue<int>() is null or not 0 and not 3)
         {
             throw new GameProviderResponseErrorException(jsonNode["errorCode"]?.ToString(), jsonNode["message"]?.ToString());
+        }
+
+        if (jsonNode["error_code"]?.GetValue<int>() is 3)
+        {
+            return new CheckFundTransferResult()
+            {
+                Retry = true,
+                Success = false
+            };
         }
 
         var data = jsonNode["Data"]
             ?? throw new Exception("取得資料失敗");
 
-        var status = data["status"]?.GetValue<int>()
-            ?? throw new Exception("取得狀態失敗");
-
-        return status is 0
-            || (status is 1
-            ? false
-            : throw new Exception("狀態未明，請繼續調用 \"checkfundtransfer\". I.如果沒有明確的回覆(statuscode 0 or 1)，請五分鐘後繼續調用直到有確切的回覆。"));
+        return data["status"]?.GetValue<int>() is 2
+            ? new CheckFundTransferResult()
+            {
+                Retry = true,
+                Success = false
+            }
+            : new CheckFundTransferResult()
+            {
+                Retry = false,
+                Success = data["status"]?.GetValue<int>() is 0
+            };
     }
 
     public async ValueTask<GetBalanceResult> CheckUserBalanceAsync(
@@ -75,18 +87,18 @@ internal class GameApiClient : IGameApiClient
         GameWalletType walletType,
         CancellationToken cancellationToken = default)
     {
-        JsonObject request = new JsonObject
+        var parameters = new Dictionary<string, string>
         {
-            { "vendor_id",vendorId },
-            { "vendor_member_ids", vendorMemberId },
-            { "wallet_id",(int)walletType}
+            ["vendor_id"] = vendorId,
+            ["vendor_member_ids"] = vendorMemberId,
+            ["wallet_id"] = ((int)walletType).ToString()
         };
 
-        var url = new Uri(apiUrl, "/api/CheckUserBalance");
+        var url = new Uri(apiUrl, "/api/CheckUserBalance/");
 
         var jsonNode = await PostAsync(
             url,
-            request,
+            parameters,
             "CheckUserBalance",
             cancellationToken).ConfigureAwait(false);
 
@@ -113,9 +125,9 @@ internal class GameApiClient : IGameApiClient
 
     public async ValueTask CreateMemberAsync(
         Uri apiUrl,
+        string operatorId,
         string vendorId,
         string vendorMemberId,
-        string operatorId,
         string firstName,
         string lastName,
         int oddsType,
@@ -124,25 +136,25 @@ internal class GameApiClient : IGameApiClient
         decimal minTransfer = 0,
         CancellationToken cancellationToken = default)
     {
-        JsonObject request = new JsonObject
+        var parameters = new Dictionary<string, string>
         {
-            { "vendor_id",vendorId },
-            { "vendor_member_ids", vendorMemberId },
-            { "operatorId",operatorId},
-            { "firstName",firstName},
-            { "lastName",lastName},
-            { "userName",vendorMemberId},
-            { "oddsType ",oddsType},
-            { "currency ",currency},
-            { "maxTransfer ",maxTransfer},
-            { "minTransfer ",minTransfer}
+            ["vendor_id"] = vendorId,
+            ["vendor_member_id"] = vendorMemberId,
+            ["operatorId"] = operatorId,
+            ["firstName"] = firstName,
+            ["lastName"] = lastName,
+            ["userName"] = vendorMemberId,
+            ["oddsType"] = oddsType.ToString(),
+            ["currency"] = currency.ToString(),
+            ["maxTransfer"] = maxTransfer.ToString(),
+            ["minTransfer"] = ((int)minTransfer).ToString()
         };
 
         var url = new Uri(apiUrl, "/api/CreateMember/");
 
         var jsonNode = await PostAsync(
             url,
-            request,
+            parameters,
             "CreateMember",
             cancellationToken).ConfigureAwait(false);
 
@@ -166,44 +178,269 @@ internal class GameApiClient : IGameApiClient
         decimal amount,
         CancellationToken cancellationToken = default)
     {
-        JsonObject request = new JsonObject
+        var parameters = new Dictionary<string, string>
         {
-            { "vendor_id",vendorId },
-            { "vendor_member_id ", vendorMemberId },
-            { "vendor_trans_id  ", vendorTransId },
-            { "amount", amount  },
-            { "currency", currency  },
-            { "direction ", (int)directionType  },
-            { "wallet_id",(int)walletType}
+            ["vendor_id"] = vendorId,
+            ["vendor_member_id"] = vendorMemberId,
+            ["vendor_trans_id"] = vendorTransId,
+            ["amount"] = amount.ToString(),
+            ["currency"] = currency.ToString(),
+            ["direction"] = ((int)directionType).ToString(),
+            ["wallet_id"] = ((int)walletType).ToString()
         };
 
         var url = new Uri(apiUrl, "/api/FundTransfer/");
 
         var jsonNode = await PostAsync(
             url,
-            request,
+            parameters,
             "FundTransfer",
             cancellationToken).ConfigureAwait(false);
 
-        return jsonNode["error_code"]?.GetValue<int>() is null or not 0
-            ? throw new GameProviderResponseErrorException(jsonNode["errorCode"]?.ToString(), jsonNode["message"]?.ToString())
-            : jsonNode["Data"]?.GetValue<FundTransferResult>()
-            ?? throw new Exception("取得點數失敗");
+        if (jsonNode["error_code"]?.GetValue<int>() is null or not 0 and not 1)
+        {
+            throw new GameProviderResponseErrorException(jsonNode["errorCode"]?.ToString(), jsonNode["message"]?.ToString());
+        }
+
+        if (jsonNode["error_code"]?.GetValue<int>() is 1)
+        {
+            return new FundTransferResult
+            {
+                Check = true,
+                Success = false
+            };
+        }
+
+        var data = jsonNode["Data"]
+            ?? throw new Exception("取得資料失敗");
+
+        return new FundTransferResult()
+        {
+            TransId = data["trans_id"]!.GetValue<long>(),
+            BeforeAmount = data["before_amount"]!.GetValue<decimal>(),
+            AfterAmount = data["after_amount"]!.GetValue<decimal>(),
+            BonusBeforeAmount = data["bonus_before_amount"]!.GetValue<decimal>(),
+            BonusAfterAmount = data["bonus_after_amount"]!.GetValue<decimal>(),
+            SystemId = data["system_id"]!.GetValue<string>(),
+            Check = false,
+            Success = data["status"]!.GetValue<int>() == 0
+        };
     }
 
-    public ValueTask GetBetDetailAsync(
+    public async ValueTask<GetBetDetailResult> GetBetDetailAsync(
         Uri apiUrl,
         string vendorId,
         long versionKey,
-        CancellationToken cancellationToken = default) => throw new NotImplementedException();
+        CancellationToken cancellationToken = default)
+    {
+        var parameters = new Dictionary<string, string>
+        {
+            ["vendor_id"] = vendorId,
+            ["version_key"] = versionKey.ToString(),
+        };
 
-    public ValueTask GetBetDetailByTimeframeAsync(
+        var url = new Uri(apiUrl, "/api/GetBetDetail/");
+
+        var jsonNode = await PostAsync(
+            url,
+            parameters,
+            "GetBetDetail",
+            cancellationToken).ConfigureAwait(false);
+
+        if (jsonNode["error_code"]?.GetValue<int>() is null or not 0)
+        {
+            throw new GameProviderResponseErrorException(jsonNode["errorCode"]?.ToString(), jsonNode["message"]?.ToString());
+        }
+
+        var data = jsonNode["Data"]
+            ?? throw new Exception("取得Data為null");
+
+        var lastVersionKey = data["last_version_key"]?.GetValue<long>()
+            ?? throw new Exception("取得last_version_key為空值");
+
+        IEnumerable<BetDetail> betDetails = new List<BetDetail>();
+
+        if (data["BetDetails"] is not null && (data["BetDetails"]?.AsArray().Any() ?? false))
+        {
+            var array = data["BetDetails"]!.AsArray();
+
+            betDetails = betDetails.Concat(array.Select(item => new BetDetail
+            {
+                TransId = item!["trans_id"]!.GetValue<long>(),
+                VendorMemberId = item!["vendor_member_id"]!.GetValue<string>(),
+                SportType = item!["sport_type"]!.GetValue<int>(),
+                TicketStatus = (GameTicketStatus)Enum.Parse(typeof(GameTicketStatus), item!["ticket_status"]!.GetValue<string>(), true),
+                TicketExtraStatus = item["ticket_extra_status"]?.ToString(),
+                Stake = item!["stake"]!.GetValue<decimal>(),
+                WinlostAmount = item!["winlost_amount"]!.GetValue<decimal>(),
+                BuybackAmount = item!["buyback_amount"]?.GetValue<decimal>(),
+                TransactionTime = item!["transaction_time"]!.GetValue<DateTime>(),
+                SettlementTime = item!["settlement_time"]?.GetValue<DateTime>(),
+                WinlostDatetime = item!["winlost_datetime"]?.GetValue<DateTime>(),
+                AdditionalData = item.ToJsonString()
+            }));
+        }
+
+        if (data["BetNumberDetails"] is not null && (data["BetNumberDetails"]?.AsArray().Any() ?? false))
+        {
+            var array = data["BetNumberDetails"]!.AsArray();
+
+            betDetails = betDetails.Concat(array.Select(item => new BetDetail
+            {
+                TransId = item!["trans_id"]!.GetValue<long>(),
+                VendorMemberId = item!["vendor_member_id"]!.GetValue<string>(),
+                SportType = item!["sport_type"]!.GetValue<int>(),
+                TicketStatus = (GameTicketStatus)Enum.Parse(typeof(GameTicketStatus), item!["ticket_status"]!.GetValue<string>(), true),
+                TicketExtraStatus = item["ticket_extra_status"]?.ToString(),
+                Stake = item!["stake"]!.GetValue<decimal>(),
+                WinlostAmount = item!["winlost_amount"]!.GetValue<decimal>(),
+                BuybackAmount = item!["buyback_amount"]?.GetValue<decimal>(),
+                TransactionTime = item!["transaction_time"]!.GetValue<DateTime>(),
+                SettlementTime = item!["settlement_time"]?.GetValue<DateTime>(),
+                WinlostDatetime = item!["winlost_datetime"]?.GetValue<DateTime>(),
+                AdditionalData = item.ToJsonString()
+            }));
+        }
+
+        if (data["BetVirtualSportDetails"] is not null && (data["BetVirtualSportDetails"]?.AsArray().Any() ?? false))
+        {
+            var array = data["BetVirtualSportDetails"]!.AsArray();
+
+            betDetails = betDetails.Concat(array.Select(item => new BetDetail
+            {
+                TransId = item!["trans_id"]!.GetValue<long>(),
+                VendorMemberId = item!["vendor_member_id"]!.GetValue<string>(),
+                SportType = item!["sport_type"]!.GetValue<int>(),
+                TicketStatus = (GameTicketStatus)Enum.Parse(typeof(GameTicketStatus), item!["ticket_status"]!.GetValue<string>(), true),
+                TicketExtraStatus = item["ticket_extra_status"]?.ToString(),
+                Stake = item!["stake"]!.GetValue<decimal>(),
+                WinlostAmount = item!["winlost_amount"]!.GetValue<decimal>(),
+                BuybackAmount = item!["buyback_amount"]?.GetValue<decimal>(),
+                TransactionTime = item!["transaction_time"]!.GetValue<DateTime>(),
+                SettlementTime = item!["settlement_time"]?.GetValue<DateTime>(),
+                WinlostDatetime = item!["winlost_datetime"]?.GetValue<DateTime>(),
+                AdditionalData = item.ToJsonString()
+            }));
+        }
+
+        return new GetBetDetailResult
+        {
+            LastVersionKey = lastVersionKey,
+            BetDetails = betDetails
+        };
+    }
+
+    public async IAsyncEnumerable<BetDetail> GetBetDetailByTimeframeAsync(
         Uri apiUrl,
         string vendorId,
-        int timeType,
-        DateTime startDate,
-        DateTime endDate,
-        CancellationToken cancellationToken = default) => throw new NotImplementedException();
+        GameTimeType timeType,
+        DateTime startTime,
+        DateTime endTime,
+       [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        var parameters = new Dictionary<string, string>
+        {
+            ["vendor_id"] = vendorId,
+            ["start_date"] = startTime.ToUniversalTime().ToString("u"),
+            ["end_date"] = endTime.ToUniversalTime().ToString("u"),
+            ["time_type"] = ((int)timeType).ToString()
+        };
+
+        var url = new Uri(apiUrl, "/api/GetBetDetailByTimeframe/");
+
+        var jsonNode = await PostAsync(
+            url,
+            parameters,
+            "GetBetDetailByTimeframe",
+            cancellationToken).ConfigureAwait(false);
+
+        if (jsonNode["error_code"]?.GetValue<int>() is null or not 0)
+        {
+            throw new GameProviderResponseErrorException(jsonNode["errorCode"]?.ToString(), jsonNode["message"]?.ToString());
+        }
+
+        var data = jsonNode["Data"];
+
+        if (data is null)
+        {
+            yield break;
+        }
+
+        IEnumerable<BetDetail> betDetails = new List<BetDetail>();
+
+        if (data["BetDetails"] is not null && (data["BetDetails"]?.AsArray().Any() ?? false))
+        {
+            var array = data["BetDetails"]!.AsArray();
+
+            betDetails = betDetails.Concat(array.Select(item => new BetDetail
+            {
+                TransId = item!["trans_id"]!.GetValue<long>(),
+                VendorMemberId = item!["vendor_member_id"]!.GetValue<string>(),
+                SportType = item!["sport_type"]!.GetValue<int>(),
+                TicketStatus = (GameTicketStatus)Enum.Parse(typeof(GameTicketStatus), item!["ticket_status"]!.GetValue<string>(), true),
+                TicketExtraStatus = item["ticket_extra_status"]?.ToString(),
+                Stake = item!["stake"]!.GetValue<decimal>(),
+                WinlostAmount = item!["winlost_amount"]!.GetValue<decimal>(),
+                BuybackAmount = item!["buyback_amount"]?.GetValue<decimal>(),
+                TransactionTime = item!["transaction_time"]!.GetValue<DateTime>(),
+                SettlementTime = item!["settlement_time"]?.GetValue<DateTime>(),
+                WinlostDatetime = item!["winlost_datetime"]?.GetValue<DateTime>(),
+                AdditionalData = item.ToJsonString()
+            }));
+        }
+
+        if (data["BetNumberDetails"] is not null && (data["BetNumberDetails"]?.AsArray().Any() ?? false))
+        {
+            var array = data["BetNumberDetails"]!.AsArray();
+
+            betDetails = betDetails.Concat(array.Select(item => new BetDetail
+            {
+                TransId = item!["trans_id"]!.GetValue<long>(),
+                VendorMemberId = item!["vendor_member_id"]!.GetValue<string>(),
+                SportType = item!["sport_type"]!.GetValue<int>(),
+                TicketStatus = (GameTicketStatus)Enum.Parse(typeof(GameTicketStatus), item!["ticket_status"]!.GetValue<string>(), true),
+                TicketExtraStatus = item["ticket_extra_status"]?.ToString(),
+                Stake = item!["stake"]!.GetValue<decimal>(),
+                WinlostAmount = item!["winlost_amount"]!.GetValue<decimal>(),
+                BuybackAmount = item!["buyback_amount"]?.GetValue<decimal>(),
+                TransactionTime = item!["transaction_time"]!.GetValue<DateTime>(),
+                SettlementTime = item!["settlement_time"]?.GetValue<DateTime>(),
+                WinlostDatetime = item!["winlost_datetime"]?.GetValue<DateTime>(),
+                AdditionalData = item.ToJsonString()
+            }));
+        }
+
+        if (data["BetVirtualSportDetails"] is not null && (data["BetVirtualSportDetails"]?.AsArray().Any() ?? false))
+        {
+            var array = data["BetVirtualSportDetails"]!.AsArray();
+
+            betDetails = betDetails.Concat(array.Select(item => new BetDetail
+            {
+                TransId = item!["trans_id"]!.GetValue<long>(),
+                VendorMemberId = item!["vendor_member_id"]!.GetValue<string>(),
+                SportType = item!["sport_type"]!.GetValue<int>(),
+                TicketStatus = (GameTicketStatus)Enum.Parse(typeof(GameTicketStatus), item!["ticket_status"]!.GetValue<string>(), true),
+                TicketExtraStatus = item["ticket_extra_status"]?.ToString(),
+                Stake = item!["stake"]!.GetValue<decimal>(),
+                WinlostAmount = item!["winlost_amount"]!.GetValue<decimal>(),
+                BuybackAmount = item!["buyback_amount"]?.GetValue<decimal>(),
+                TransactionTime = item!["transaction_time"]!.GetValue<DateTime>(),
+                SettlementTime = item!["settlement_time"]?.GetValue<DateTime>(),
+                WinlostDatetime = item!["winlost_datetime"]?.GetValue<DateTime>(),
+                AdditionalData = item.ToJsonString()
+            }));
+        }
+
+        if (!betDetails.Any())
+        {
+            yield break;
+        }
+
+        foreach (var betDetail in betDetails)
+        {
+            yield return betDetail;
+        }
+    }
 
     public async ValueTask KickUserAsync(
         Uri apiUrl,
@@ -211,24 +448,59 @@ internal class GameApiClient : IGameApiClient
         string vendorMemberId,
         CancellationToken cancellationToken = default)
     {
-        JsonObject request = new JsonObject
+        var parameters = new Dictionary<string, string>
         {
-            { "vendor_id",vendorId },
-            { "vendor_member_ids", vendorMemberId }
+            ["vendor_id"] = vendorId,
+            ["vendor_member_id"] = vendorMemberId
         };
 
         var url = new Uri(apiUrl, "/api/KickUser/");
 
         _ = await PostAsync(
            url,
-           request,
+           parameters,
            "KickUser",
            cancellationToken).ConfigureAwait(false);
     }
 
+    public async ValueTask<GetGameUrlResult> GetSabaUrlAsync(
+        Uri apiUrl,
+        string vendorId,
+        string vendorMemberId,
+        GamePlatformType platformType,
+        CancellationToken cancellationToken = default)
+    {
+        var parameters = new Dictionary<string, string>
+        {
+            ["vendor_id"] = vendorId,
+            ["platform"] = ((int)platformType).ToString(),
+            ["vendor_member_id"] = vendorMemberId
+        };
+
+        var url = new Uri(apiUrl, "/api/GetSabaUrl/");
+
+        var jsonNode = await PostAsync(
+           url,
+           parameters,
+           "GetSabaUrl",
+           cancellationToken).ConfigureAwait(false);
+
+        if (jsonNode["error_code"]?.GetValue<int>() is null or not 0)
+        {
+            return (jsonNode["error_code"]?.GetValue<int>() is null or not 2)
+                ? throw new GameProviderResponseErrorException(jsonNode["errorCode"]?.ToString(), jsonNode["message"]?.ToString())
+                : new GetGameUrlResult(false, string.Empty);
+        }
+
+        var data = jsonNode["Data"]?.ToString()
+            ?? throw new Exception("取得網址失敗");
+
+        return new GetGameUrlResult(true, data);
+    }
+
     private async ValueTask<JsonNode> PostAsync(
         Uri apiUrl,
-        JsonObject request,
+        IEnumerable<KeyValuePair<string, string>> parameters,
         string logPrefix,
         CancellationToken cancellationToken = default)
     {
@@ -236,7 +508,8 @@ internal class GameApiClient : IGameApiClient
 
         var sw = Stopwatch.StartNew();
 
-        var content = new StringContent(request.ToJsonString(), Encoding.UTF8, MediaTypeNames.Application.Json);
+        HttpContent content = new FormUrlEncodedContent(parameters);
+
         var httpResponseMessage = await _client.PostAsync(apiUrl, content, cancellationToken);
 
         sw.Stop();

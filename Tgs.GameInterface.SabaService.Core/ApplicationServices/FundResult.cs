@@ -1,0 +1,9 @@
+﻿namespace Tgs.GameInterface.SabaService.Core.ApplicationServices;
+
+public record FundResult(
+    string VendorTransId,
+    string ActualVendorTransId,
+    long TransId,
+    bool Check,
+    bool Success,
+    decimal Balance);

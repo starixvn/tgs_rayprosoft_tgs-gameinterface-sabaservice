@@ -6,9 +6,9 @@ public interface IGameApiClient
 {
     ValueTask CreateMemberAsync(
         Uri apiUrl,
+        string operatorId,
         string vendorId,
         string vendorMemberId,
-        string operatorId,
         string firstName,
         string lastName,
         int oddsType,
@@ -28,14 +28,14 @@ public interface IGameApiClient
         decimal amount,
         CancellationToken cancellationToken = default);
 
-    ValueTask<bool> CheckFundTransferAsync(
+    ValueTask<CheckFundTransferResult> CheckFundTransferAsync(
         Uri apiUrl,
         string vendorId,
         string vendorTransId,
         GameWalletType walletType,
         CancellationToken cancellationToken = default);
 
-    ValueTask GetBetDetailAsync(
+    ValueTask<GetBetDetailResult> GetBetDetailAsync(
         Uri apiUrl,
         string vendorId,
         long versionKey,
@@ -54,11 +54,18 @@ public interface IGameApiClient
         GameWalletType walletType,
         CancellationToken cancellationToken = default);
 
-    ValueTask GetBetDetailByTimeframeAsync(
+    IAsyncEnumerable<BetDetail> GetBetDetailByTimeframeAsync(
         Uri apiUrl,
         string vendorId,
-        int timeType,
-        DateTime startDate,
-        DateTime endDate,
+        GameTimeType timeType,
+        DateTime startTime,
+        DateTime endTime,
+        CancellationToken cancellationToken = default);
+
+    ValueTask<GetGameUrlResult> GetSabaUrlAsync(
+        Uri apiUrl,
+        string vendorId,
+        string vendorMemberId,
+        GamePlatformType platformType,
         CancellationToken cancellationToken = default);
 }

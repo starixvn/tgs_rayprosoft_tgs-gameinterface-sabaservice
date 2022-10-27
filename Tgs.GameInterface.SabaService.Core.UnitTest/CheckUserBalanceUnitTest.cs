@@ -12,12 +12,12 @@ public class CheckUserBalanceUnitTest
     public async Task Player_Does_Not_Exist()
     {
         var apiUrl = new Uri("http://h0i2tsa.bw6688.com/");
-        var vendorId = "kwmmuz6qqi";
-        var vendorMemberId = "4ucmqplxb029";
+        var vendorId = "um5vspnzkx";
+        var vendorMemberId = "tg_4ucmqplxb029_test";
         var walletType = GameWalletType.Sportsbook;
 
-        var url = new Uri(apiUrl, "/api/CheckUserBalance");
-        var response = "{\"error_code\":0,\"message\":\"\",\"Data\":[{\"vendor_member_id\":\"4ucmqplxb029\",\"balance\":null,\"bonus_balance\":null,\"outstanding\":null,\"currency\":null,\"error_code\":2}]}";
+        var url = new Uri(apiUrl, "/api/CheckUserBalance/");
+        var response = "{\"error_code\":0,\"message\":\"\",\"Data\":[{\"vendor_member_id\":\"tg_4ucmqplxb029_test\",\"balance\":null,\"bonus_balance\":null,\"outstanding\":null,\"currency\":null,\"error_code\":2}]}";
         var handler = new MockHttpMessageHandler();
         _ = handler.Expect(HttpMethod.Post, url.ToString())
                         .Respond(HttpStatusCode.OK, new StringContent(response));
@@ -43,11 +43,11 @@ public class CheckUserBalanceUnitTest
     public async Task Normal_Process()
     {
         var apiUrl = new Uri("http://h0i2tsa.bw6688.com/");
-        var vendorId = "kwmmuz6qqi";
-        var vendorMemberId = "4ucmqplxb029";
+        var vendorId = "um5vspnzkx";
+        var vendorMemberId = "tg_4ucmqplxb029_test";
         var walletType = GameWalletType.Sportsbook;
 
-        var url = new Uri(apiUrl, "/api/CheckUserBalance");
+        var url = new Uri(apiUrl, "/api/CheckUserBalance/");
         var response = "{\"error_code\":0,\"message\":\"\",\"Data\":[{\"vendor_member_id\":\"4ucmqplxb029\",\"balance\":100,\"bonus_balance\":0,\"outstanding\":0,\"currency\":0,\"error_code\":0}]}";
         var handler = new MockHttpMessageHandler();
         _ = handler.Expect(HttpMethod.Post, url.ToString())
@@ -75,11 +75,11 @@ public class CheckUserBalanceUnitTest
     public async Task Other_Errors()
     {
         var apiUrl = new Uri("http://h0i2tsa.bw6688.com/");
-        var vendorId = "kwmmuz6qqi";
-        var vendorMemberId = "4ucmqplxb029";
+        var vendorId = "um5vspnzkx";
+        var vendorMemberId = "tg_4ucmqplxb029_test";
         var walletType = GameWalletType.Sportsbook;
 
-        var url = new Uri(apiUrl, "/api/CheckUserBalance");
+        var url = new Uri(apiUrl, "/api/CheckUserBalance/");
         var response = "{\"error_code\":1,\"message\":\"Failed during executed\",\"Data\":[]}";
         var handler = new MockHttpMessageHandler();
         _ = handler.Expect(HttpMethod.Post, url.ToString())
