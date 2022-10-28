@@ -2,4 +2,4 @@
 
 public record GameUrlResult(
     bool IsPlayerExist,
-    string Url);
+    string GameUrl);

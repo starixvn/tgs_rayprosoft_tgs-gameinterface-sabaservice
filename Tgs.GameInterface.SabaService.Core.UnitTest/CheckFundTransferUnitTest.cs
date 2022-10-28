@@ -36,7 +36,7 @@ public class CheckFundTransferUnitTest
             .ConfigureAwait(false);
 
         Assert.IsNotNull(actual);
-        Assert.IsTrue(actual.Success);
+        Assert.IsTrue(actual.IsOrderExist);
     }
 
     [TestMethod]
@@ -68,7 +68,7 @@ public class CheckFundTransferUnitTest
 
         Assert.IsNotNull(actual);
         Assert.IsTrue(actual.Retry);
-        Assert.IsFalse(actual.Success);
+        Assert.IsFalse(actual.IsOrderExist);
     }
 
     [TestMethod]
@@ -100,7 +100,7 @@ public class CheckFundTransferUnitTest
 
         Assert.IsNotNull(actual);
         Assert.IsFalse(actual.Retry);
-        Assert.IsFalse(actual.Success);
+        Assert.IsFalse(actual.IsOrderExist);
     }
 
     [TestMethod]

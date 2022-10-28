@@ -5,5 +5,5 @@ public record FundResult(
     string ActualVendorTransId,
     long TransId,
     bool Check,
-    bool Success,
+    bool IsOrderExist,
     decimal Balance);

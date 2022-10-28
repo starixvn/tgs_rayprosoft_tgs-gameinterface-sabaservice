@@ -1,13 +1,11 @@
 ﻿namespace Tgs.GameInterface.SabaService.Core.Models;
 
-public record FundTransferResult
-{
-    public long TransId { get; init; } = default!;
-    public decimal? BeforeAmount { get; init; }
-    public decimal? AfterAmount { get; init; }
-    public decimal BonusBeforeAmount { get; init; }
-    public decimal BonusAfterAmount { get; init; }
-    public string SystemId { get; init; } = default!;
-    public bool Check { get; init; }
-    public bool Success { get; init; }
-}
+public record FundTransferResult(
+    bool Check,
+    bool IsOrderExist,
+    long TransId = 0,
+    decimal BeforeAmount = 0,
+    decimal AfterAmount = 0,
+    decimal BonusBeforeAmount = 0,
+    decimal BonusAfterAmount = 0,
+    string SystemId = "");

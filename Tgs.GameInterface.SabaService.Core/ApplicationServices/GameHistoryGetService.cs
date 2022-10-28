@@ -2,12 +2,12 @@
 
 namespace Tgs.GameInterface.SabaService.Core.ApplicationServices;
 
-internal class GameBetDetailGetService : IGetService<GameBetDetailQuery, GameBetDetailResult>
+internal class GameHistoryGetService : IGetService<GameHistoryQuery, GameHistoryResult>
 {
     private readonly IGameApiClient _client;
     private readonly IVendorMember _vendorMember;
 
-    public GameBetDetailGetService(
+    public GameHistoryGetService(
         IGameApiClient client,
         IVendorMember vendorMember)
     {
@@ -15,8 +15,8 @@ internal class GameBetDetailGetService : IGetService<GameBetDetailQuery, GameBet
         _vendorMember = vendorMember ?? throw new ArgumentNullException(nameof(vendorMember));
     }
 
-    public async ValueTask<GameBetDetailResult> GetAsync(
-        GameBetDetailQuery query,
+    public async ValueTask<GameHistoryResult> GetAsync(
+        GameHistoryQuery query,
         CancellationToken cancellationToken = default)
     {
         var result = await _client
@@ -27,48 +27,51 @@ internal class GameBetDetailGetService : IGetService<GameBetDetailQuery, GameBet
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        if (!result.BetDetails.Any())
+        if (!result.Details.Any())
         {
-            return new GameBetDetailResult(
+            return new GameHistoryResult(
                 LastVersionKey: result.LastVersionKey,
-                BetDetails: Enumerable.Empty<GameBetDetail>());
+                Details: Enumerable.Empty<GameHistoryDetail>());
         }
 
-        var betDetails = result.BetDetails.Where(x => x.TicketStatus != GameTicketStatus.Waiting)
+        var betDetails = result.Details.Where(x => !x.TicketStatus.Equals("waiting", StringComparison.OrdinalIgnoreCase))
             .Select(betDetail =>
             {
                 var playerCode = _vendorMember.ConvertToPlatformMember(query.OperatorId, betDetail.VendorMemberId);
-                var isClosed = betDetail.TicketStatus != GameTicketStatus.Running;
+                var isClosed = !betDetail.TicketStatus.Equals("running", StringComparison.OrdinalIgnoreCase);
                 var externalClosedOn = DateTime.UnixEpoch;
+                var validBet = betDetail.Stake;
                 var playerWinLoss = 0m;
                 var turnover = 0m;
                 var settle = 0m;
-
+                var isCashout = betDetail.BuybackAmount.HasValue;
                 if (isClosed)
                 {
+                    validBet = isCashout ? 0 : betDetail.Stake;
                     playerWinLoss = betDetail.WinlostAmount;
-                    turnover = betDetail.Stake;
+                    turnover = isCashout ? 0 : betDetail.Stake;
                     settle = betDetail.BuybackAmount ?? betDetail.WinlostAmount + betDetail.Stake;
-                    externalClosedOn = betDetail.SportType < 100 ? betDetail.SettlementTime!.Value : betDetail.WinlostDatetime!.Value;
+                    externalClosedOn = betDetail.SportType < 100 ? betDetail.SettlementTime : betDetail.WinlostDatetime;
                 }
 
-                return new GameBetDetail(
+                return new GameHistoryDetail(
                     PlayerCode: playerCode,
                     ExternalRoundId: betDetail.TransId.ToString(),
+                    IsCashout: isCashout,
                     IsClosed: isClosed,
                     Status: betDetail.TicketStatus,
                     ExternalCreatedOn: betDetail.TransactionTime,
                     ExternalClosedOn: externalClosedOn,
                     Bet: betDetail.Stake,
-                    ValidBet: betDetail.Stake,
+                    ValidBet: validBet,
                     PlayerWinLoss: playerWinLoss,
-                    Turnover: betDetail.Stake,
+                    Turnover: turnover,
                     Settle: settle,
                     AdditionalData: betDetail.AdditionalData);
             });
 
-        return new GameBetDetailResult(
+        return new GameHistoryResult(
             LastVersionKey: result.LastVersionKey,
-            BetDetails: betDetails);
+            Details: betDetails);
     }
 }

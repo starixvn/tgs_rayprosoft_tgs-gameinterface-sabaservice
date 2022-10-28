@@ -2,4 +2,4 @@
 
 public record FundStatusResult(
     bool Retry,
-    bool Success);
+    bool IsOrderExist);

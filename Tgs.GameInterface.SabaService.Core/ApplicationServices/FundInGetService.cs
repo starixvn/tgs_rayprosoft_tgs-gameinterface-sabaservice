@@ -32,11 +32,11 @@ internal class FundInGetService : IGetService<FundInQuery, FundResult>
             cancellationToken: cancellationToken).ConfigureAwait(false);
 
         return new FundResult(
+            Check: result.Check,
+            IsOrderExist: result.IsOrderExist,
             VendorTransId: query.VendorTransId,
             ActualVendorTransId: vendorTransId,
             TransId: result.TransId,
-            Check: result.Check,
-            Success: result.Success,
-            Balance: result.BeforeAmount.GetValueOrDefault(0));
+            Balance: result.AfterAmount);
     }
 }

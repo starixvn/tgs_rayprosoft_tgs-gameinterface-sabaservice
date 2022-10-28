@@ -1,10 +1,13 @@
-﻿namespace Tgs.GameInterface.SabaService.Core.ApplicationServices;
+﻿using Tgs.GameInterface.SabaService.Protos;
 
-public record GameBetDetail(
+namespace Tgs.GameInterface.SabaService.ViewModels;
+
+public record GameHistoryDetailViewModel(
     string PlayerCode,
     string ExternalRoundId,
+    bool IsCashout,
     bool IsClosed,
-    GameTicketStatus Status,
+    GameHistoryStatus Status,
     DateTimeOffset ExternalCreatedOn,
     DateTimeOffset ExternalClosedOn,
     decimal Bet,

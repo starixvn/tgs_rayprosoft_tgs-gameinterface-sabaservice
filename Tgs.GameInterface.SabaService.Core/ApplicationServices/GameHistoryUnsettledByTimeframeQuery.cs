@@ -1,7 +1,8 @@
 ﻿namespace Tgs.GameInterface.SabaService.Core.ApplicationServices;
 
-public record GameBetDetailQuery(
+public record GameHistoryUnsettledByTimeframeQuery(
     Uri ApiUrl,
     string OperatorId,
     string VendorId,
-    long VersionKey);
+    DateTime StartTime,
+    DateTime EndTime);

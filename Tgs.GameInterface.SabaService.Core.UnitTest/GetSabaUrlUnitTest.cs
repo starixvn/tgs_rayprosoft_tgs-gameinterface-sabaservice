@@ -68,7 +68,7 @@ public class GetSabaUrlUnitTest
 
         Assert.IsNotNull(actual);
         Assert.IsTrue(actual.IsPlayerExist);
-        Assert.IsFalse(string.IsNullOrWhiteSpace(actual.Url));
+        Assert.IsFalse(string.IsNullOrWhiteSpace(actual.GameUrl));
     }
 
     [TestMethod]

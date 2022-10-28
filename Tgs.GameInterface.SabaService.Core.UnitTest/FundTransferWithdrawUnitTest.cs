@@ -45,7 +45,7 @@ public class FundTransferWithdrawUnitTest
 
         Assert.IsNotNull(actual);
         Assert.IsFalse(actual.Check);
-        Assert.IsTrue(actual.Success);
+        Assert.IsTrue(actual.IsOrderExist);
         Assert.AreEqual(1m, actual.BeforeAmount);
         Assert.AreEqual(0m, actual.AfterAmount);
     }
@@ -87,7 +87,7 @@ public class FundTransferWithdrawUnitTest
 
         Assert.IsNotNull(actual);
         Assert.IsTrue(actual.Check);
-        Assert.IsFalse(actual.Success);
+        Assert.IsFalse(actual.IsOrderExist);
     }
 
     [TestMethod]

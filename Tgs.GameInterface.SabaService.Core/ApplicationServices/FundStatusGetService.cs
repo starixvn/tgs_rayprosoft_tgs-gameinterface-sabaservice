@@ -26,6 +26,6 @@ internal class FundStatusGetService : IGetService<FundStatusQuery, FundStatusRes
 
         return new FundStatusResult(
             Retry: result.Retry,
-            Success: result.Success);
+            IsOrderExist: result.IsOrderExist);
     }
 }

@@ -12,7 +12,6 @@ internal class GameApiClient : IGameApiClient
 {
     private readonly HttpClient _client;
     private readonly ILogger<GameApiClient> _logger;
-    private readonly JsonSerializerOptions _jsonSerializerOptions;
 
     public GameApiClient(
         HttpClient client,
@@ -20,11 +19,6 @@ internal class GameApiClient : IGameApiClient
     {
         _client = client ?? throw new ArgumentNullException(nameof(client));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _jsonSerializerOptions = new JsonSerializerOptions
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            PropertyNameCaseInsensitive = true
-        };
     }
 
     public async ValueTask<CheckFundTransferResult> CheckFundTransferAsync(
@@ -57,27 +51,21 @@ internal class GameApiClient : IGameApiClient
 
         if (jsonNode["error_code"]?.GetValue<int>() is 3)
         {
-            return new CheckFundTransferResult()
-            {
-                Retry = true,
-                Success = false
-            };
+            return new CheckFundTransferResult(
+                Retry: true,
+                IsOrderExist: false);
         }
 
         var data = jsonNode["Data"]
             ?? throw new Exception("取得資料失敗");
 
         return data["status"]?.GetValue<int>() is 2
-            ? new CheckFundTransferResult()
-            {
-                Retry = true,
-                Success = false
-            }
-            : new CheckFundTransferResult()
-            {
-                Retry = false,
-                Success = data["status"]?.GetValue<int>() is 0
-            };
+            ? new CheckFundTransferResult(
+                Retry: true,
+                IsOrderExist: false)
+            : new CheckFundTransferResult(
+                Retry: false,
+                IsOrderExist: data["status"]?.GetValue<int>() is 0);
     }
 
     public async ValueTask<GetBalanceResult> CheckUserBalanceAsync(
@@ -204,27 +192,23 @@ internal class GameApiClient : IGameApiClient
 
         if (jsonNode["error_code"]?.GetValue<int>() is 1)
         {
-            return new FundTransferResult
-            {
-                Check = true,
-                Success = false
-            };
+            return new FundTransferResult(
+                 Check: true,
+                 IsOrderExist: false);
         }
 
         var data = jsonNode["Data"]
             ?? throw new Exception("取得資料失敗");
 
-        return new FundTransferResult()
-        {
-            TransId = data["trans_id"]!.GetValue<long>(),
-            BeforeAmount = data["before_amount"]!.GetValue<decimal>(),
-            AfterAmount = data["after_amount"]!.GetValue<decimal>(),
-            BonusBeforeAmount = data["bonus_before_amount"]!.GetValue<decimal>(),
-            BonusAfterAmount = data["bonus_after_amount"]!.GetValue<decimal>(),
-            SystemId = data["system_id"]!.GetValue<string>(),
-            Check = false,
-            Success = data["status"]!.GetValue<int>() == 0
-        };
+        return new FundTransferResult(
+            Check: false,
+            IsOrderExist: data["status"]!.GetValue<int>() == 0,
+            TransId: data["trans_id"]!.GetValue<long>(),
+            BeforeAmount: data["before_amount"]!.GetValue<decimal>(),
+            AfterAmount: data["after_amount"]!.GetValue<decimal>(),
+            BonusBeforeAmount: data["bonus_before_amount"]!.GetValue<decimal>(),
+            BonusAfterAmount: data["bonus_after_amount"]!.GetValue<decimal>(),
+            SystemId: data["system_id"]!.GetValue<string>());
     }
 
     public async ValueTask<GetBetDetailResult> GetBetDetailAsync(
@@ -264,70 +248,62 @@ internal class GameApiClient : IGameApiClient
         {
             var array = data["BetDetails"]!.AsArray();
 
-            betDetails = betDetails.Concat(array.Select(item => new BetDetail
-            {
-                TransId = item!["trans_id"]!.GetValue<long>(),
-                VendorMemberId = item!["vendor_member_id"]!.GetValue<string>(),
-                SportType = item!["sport_type"]!.GetValue<int>(),
-                TicketStatus = (GameTicketStatus)Enum.Parse(typeof(GameTicketStatus), item!["ticket_status"]!.GetValue<string>(), true),
-                TicketExtraStatus = item["ticket_extra_status"]?.ToString(),
-                Stake = item!["stake"]!.GetValue<decimal>(),
-                WinlostAmount = item!["winlost_amount"]!.GetValue<decimal>(),
-                BuybackAmount = item!["buyback_amount"]?.GetValue<decimal>(),
-                TransactionTime = item!["transaction_time"]!.GetValue<DateTime>(),
-                SettlementTime = item!["settlement_time"]?.GetValue<DateTime>(),
-                WinlostDatetime = item!["winlost_datetime"]?.GetValue<DateTime>(),
-                AdditionalData = item.ToJsonString()
-            }));
+            betDetails = betDetails.Concat(array.Select(item => new BetDetail(
+                TransId: item!["trans_id"]!.GetValue<long>(),
+                VendorMemberId: item!["vendor_member_id"]!.GetValue<string>(),
+                SportType: item!["sport_type"]!.GetValue<int>(),
+                TicketStatus: item!["ticket_status"]!.GetValue<string>(),
+                TicketExtraStatus: item["ticket_extra_status"]?.ToString(),
+                Stake: item!["stake"]!.GetValue<decimal>(),
+                WinlostAmount: item!["winlost_amount"]!.GetValue<decimal>(),
+                BuybackAmount: item!["buyback_amount"]?.GetValue<decimal>(),
+                TransactionTime: (item!["transaction_time"]?.ToString() ?? string.Empty).StringConvertToDatetime(),
+                SettlementTime: (item!["settlement_time"]?.ToString() ?? string.Empty).StringConvertToDatetime(),
+                WinlostDatetime: (item!["winlost_datetime"]?.ToString() ?? string.Empty).StringConvertToDatetime(),
+                AdditionalData: item.ToJsonString())));
         }
 
         if (data["BetNumberDetails"] is not null && (data["BetNumberDetails"]?.AsArray().Any() ?? false))
         {
             var array = data["BetNumberDetails"]!.AsArray();
 
-            betDetails = betDetails.Concat(array.Select(item => new BetDetail
-            {
-                TransId = item!["trans_id"]!.GetValue<long>(),
-                VendorMemberId = item!["vendor_member_id"]!.GetValue<string>(),
-                SportType = item!["sport_type"]!.GetValue<int>(),
-                TicketStatus = (GameTicketStatus)Enum.Parse(typeof(GameTicketStatus), item!["ticket_status"]!.GetValue<string>(), true),
-                TicketExtraStatus = item["ticket_extra_status"]?.ToString(),
-                Stake = item!["stake"]!.GetValue<decimal>(),
-                WinlostAmount = item!["winlost_amount"]!.GetValue<decimal>(),
-                BuybackAmount = item!["buyback_amount"]?.GetValue<decimal>(),
-                TransactionTime = item!["transaction_time"]!.GetValue<DateTime>(),
-                SettlementTime = item!["settlement_time"]?.GetValue<DateTime>(),
-                WinlostDatetime = item!["winlost_datetime"]?.GetValue<DateTime>(),
-                AdditionalData = item.ToJsonString()
-            }));
+            betDetails = betDetails.Concat(array.Select(item => new BetDetail(
+                TransId: item!["trans_id"]!.GetValue<long>(),
+                VendorMemberId: item!["vendor_member_id"]!.GetValue<string>(),
+                SportType: item!["sport_type"]!.GetValue<int>(),
+                TicketStatus: item!["ticket_status"]!.GetValue<string>(),
+                TicketExtraStatus: item["ticket_extra_status"]?.ToString(),
+                Stake: item!["stake"]!.GetValue<decimal>(),
+                WinlostAmount: item!["winlost_amount"]!.GetValue<decimal>(),
+                BuybackAmount: item!["buyback_amount"]?.GetValue<decimal>(),
+                TransactionTime: (item!["transaction_time"]?.ToString() ?? string.Empty).StringConvertToDatetime(),
+                SettlementTime: (item!["settlement_time"]?.ToString() ?? string.Empty).StringConvertToDatetime(),
+                WinlostDatetime: (item!["winlost_datetime"]?.ToString() ?? string.Empty).StringConvertToDatetime(),
+                AdditionalData: item.ToJsonString())));
         }
 
         if (data["BetVirtualSportDetails"] is not null && (data["BetVirtualSportDetails"]?.AsArray().Any() ?? false))
         {
             var array = data["BetVirtualSportDetails"]!.AsArray();
 
-            betDetails = betDetails.Concat(array.Select(item => new BetDetail
-            {
-                TransId = item!["trans_id"]!.GetValue<long>(),
-                VendorMemberId = item!["vendor_member_id"]!.GetValue<string>(),
-                SportType = item!["sport_type"]!.GetValue<int>(),
-                TicketStatus = (GameTicketStatus)Enum.Parse(typeof(GameTicketStatus), item!["ticket_status"]!.GetValue<string>(), true),
-                TicketExtraStatus = item["ticket_extra_status"]?.ToString(),
-                Stake = item!["stake"]!.GetValue<decimal>(),
-                WinlostAmount = item!["winlost_amount"]!.GetValue<decimal>(),
-                BuybackAmount = item!["buyback_amount"]?.GetValue<decimal>(),
-                TransactionTime = item!["transaction_time"]!.GetValue<DateTime>(),
-                SettlementTime = item!["settlement_time"]?.GetValue<DateTime>(),
-                WinlostDatetime = item!["winlost_datetime"]?.GetValue<DateTime>(),
-                AdditionalData = item.ToJsonString()
-            }));
+            betDetails = betDetails.Concat(array.Select(item => new BetDetail(
+                TransId: item!["trans_id"]!.GetValue<long>(),
+                VendorMemberId: item!["vendor_member_id"]!.GetValue<string>(),
+                SportType: item!["sport_type"]!.GetValue<int>(),
+                TicketStatus: item!["ticket_status"]!.GetValue<string>(),
+                TicketExtraStatus: item["ticket_extra_status"]?.ToString(),
+                Stake: item!["stake"]!.GetValue<decimal>(),
+                WinlostAmount: item!["winlost_amount"]!.GetValue<decimal>(),
+                BuybackAmount: item!["buyback_amount"]?.GetValue<decimal>(),
+                TransactionTime: (item!["transaction_time"]?.ToString() ?? string.Empty).StringConvertToDatetime(),
+                SettlementTime: (item!["settlement_time"]?.ToString() ?? string.Empty).StringConvertToDatetime(),
+                WinlostDatetime: (item!["winlost_datetime"]?.ToString() ?? string.Empty).StringConvertToDatetime(),
+                AdditionalData: item.ToJsonString())));
         }
 
-        return new GetBetDetailResult
-        {
-            LastVersionKey = lastVersionKey,
-            BetDetails = betDetails
-        };
+        return new GetBetDetailResult(
+            LastVersionKey: lastVersionKey,
+            Details: betDetails);
     }
 
     public async IAsyncEnumerable<BetDetail> GetBetDetailByTimeframeAsync(
@@ -341,8 +317,8 @@ internal class GameApiClient : IGameApiClient
         var parameters = new Dictionary<string, string>
         {
             ["vendor_id"] = vendorId,
-            ["start_date"] = startTime.ToUniversalTime().ToString("u"),
-            ["end_date"] = endTime.ToUniversalTime().ToString("u"),
+            ["start_date"] = startTime.DatetimeConvertToString(),
+            ["end_date"] = endTime.DatetimeConvertToString(),
             ["time_type"] = ((int)timeType).ToString()
         };
 
@@ -372,63 +348,57 @@ internal class GameApiClient : IGameApiClient
         {
             var array = data["BetDetails"]!.AsArray();
 
-            betDetails = betDetails.Concat(array.Select(item => new BetDetail
-            {
-                TransId = item!["trans_id"]!.GetValue<long>(),
-                VendorMemberId = item!["vendor_member_id"]!.GetValue<string>(),
-                SportType = item!["sport_type"]!.GetValue<int>(),
-                TicketStatus = (GameTicketStatus)Enum.Parse(typeof(GameTicketStatus), item!["ticket_status"]!.GetValue<string>(), true),
-                TicketExtraStatus = item["ticket_extra_status"]?.ToString(),
-                Stake = item!["stake"]!.GetValue<decimal>(),
-                WinlostAmount = item!["winlost_amount"]!.GetValue<decimal>(),
-                BuybackAmount = item!["buyback_amount"]?.GetValue<decimal>(),
-                TransactionTime = item!["transaction_time"]!.GetValue<DateTime>(),
-                SettlementTime = item!["settlement_time"]?.GetValue<DateTime>(),
-                WinlostDatetime = item!["winlost_datetime"]?.GetValue<DateTime>(),
-                AdditionalData = item.ToJsonString()
-            }));
+            betDetails = betDetails.Concat(array.Select(item => new BetDetail(
+                TransId: item!["trans_id"]!.GetValue<long>(),
+                VendorMemberId: item!["vendor_member_id"]!.GetValue<string>(),
+                SportType: item!["sport_type"]!.GetValue<int>(),
+                TicketStatus: item!["ticket_status"]!.GetValue<string>(),
+                TicketExtraStatus: item["ticket_extra_status"]?.ToString(),
+                Stake: item!["stake"]!.GetValue<decimal>(),
+                WinlostAmount: item!["winlost_amount"]!.GetValue<decimal>(),
+                BuybackAmount: item!["buyback_amount"]?.GetValue<decimal>(),
+                TransactionTime: (item!["transaction_time"]?.ToString() ?? string.Empty).StringConvertToDatetime(),
+                SettlementTime: (item!["settlement_time"]?.ToString() ?? string.Empty).StringConvertToDatetime(),
+                WinlostDatetime: (item!["winlost_datetime"]?.ToString() ?? string.Empty).StringConvertToDatetime(),
+                AdditionalData: item.ToJsonString())));
         }
 
         if (data["BetNumberDetails"] is not null && (data["BetNumberDetails"]?.AsArray().Any() ?? false))
         {
             var array = data["BetNumberDetails"]!.AsArray();
 
-            betDetails = betDetails.Concat(array.Select(item => new BetDetail
-            {
-                TransId = item!["trans_id"]!.GetValue<long>(),
-                VendorMemberId = item!["vendor_member_id"]!.GetValue<string>(),
-                SportType = item!["sport_type"]!.GetValue<int>(),
-                TicketStatus = (GameTicketStatus)Enum.Parse(typeof(GameTicketStatus), item!["ticket_status"]!.GetValue<string>(), true),
-                TicketExtraStatus = item["ticket_extra_status"]?.ToString(),
-                Stake = item!["stake"]!.GetValue<decimal>(),
-                WinlostAmount = item!["winlost_amount"]!.GetValue<decimal>(),
-                BuybackAmount = item!["buyback_amount"]?.GetValue<decimal>(),
-                TransactionTime = item!["transaction_time"]!.GetValue<DateTime>(),
-                SettlementTime = item!["settlement_time"]?.GetValue<DateTime>(),
-                WinlostDatetime = item!["winlost_datetime"]?.GetValue<DateTime>(),
-                AdditionalData = item.ToJsonString()
-            }));
+            betDetails = betDetails.Concat(array.Select(item => new BetDetail(
+                TransId: item!["trans_id"]!.GetValue<long>(),
+                VendorMemberId: item!["vendor_member_id"]!.GetValue<string>(),
+                SportType: item!["sport_type"]!.GetValue<int>(),
+                TicketStatus: item!["ticket_status"]!.GetValue<string>(),
+                TicketExtraStatus: item["ticket_extra_status"]?.ToString(),
+                Stake: item!["stake"]!.GetValue<decimal>(),
+                WinlostAmount: item!["winlost_amount"]!.GetValue<decimal>(),
+                BuybackAmount: item!["buyback_amount"]?.GetValue<decimal>(),
+                TransactionTime: (item!["transaction_time"]?.ToString() ?? string.Empty).StringConvertToDatetime(),
+                SettlementTime: (item!["settlement_time"]?.ToString() ?? string.Empty).StringConvertToDatetime(),
+                WinlostDatetime: (item!["winlost_datetime"]?.ToString() ?? string.Empty).StringConvertToDatetime(),
+                AdditionalData: item.ToJsonString())));
         }
 
         if (data["BetVirtualSportDetails"] is not null && (data["BetVirtualSportDetails"]?.AsArray().Any() ?? false))
         {
             var array = data["BetVirtualSportDetails"]!.AsArray();
 
-            betDetails = betDetails.Concat(array.Select(item => new BetDetail
-            {
-                TransId = item!["trans_id"]!.GetValue<long>(),
-                VendorMemberId = item!["vendor_member_id"]!.GetValue<string>(),
-                SportType = item!["sport_type"]!.GetValue<int>(),
-                TicketStatus = (GameTicketStatus)Enum.Parse(typeof(GameTicketStatus), item!["ticket_status"]!.GetValue<string>(), true),
-                TicketExtraStatus = item["ticket_extra_status"]?.ToString(),
-                Stake = item!["stake"]!.GetValue<decimal>(),
-                WinlostAmount = item!["winlost_amount"]!.GetValue<decimal>(),
-                BuybackAmount = item!["buyback_amount"]?.GetValue<decimal>(),
-                TransactionTime = item!["transaction_time"]!.GetValue<DateTime>(),
-                SettlementTime = item!["settlement_time"]?.GetValue<DateTime>(),
-                WinlostDatetime = item!["winlost_datetime"]?.GetValue<DateTime>(),
-                AdditionalData = item.ToJsonString()
-            }));
+            betDetails = betDetails.Concat(array.Select(item => new BetDetail(
+                TransId: item!["trans_id"]!.GetValue<long>(),
+                VendorMemberId: item!["vendor_member_id"]!.GetValue<string>(),
+                SportType: item!["sport_type"]!.GetValue<int>(),
+                TicketStatus: item!["ticket_status"]!.GetValue<string>(),
+                TicketExtraStatus: item["ticket_extra_status"]?.ToString(),
+                Stake: item!["stake"]!.GetValue<decimal>(),
+                WinlostAmount: item!["winlost_amount"]!.GetValue<decimal>(),
+                BuybackAmount: item!["buyback_amount"]?.GetValue<decimal>(),
+                TransactionTime: (item!["transaction_time"]?.ToString() ?? string.Empty).StringConvertToDatetime(),
+                SettlementTime: (item!["settlement_time"]?.ToString() ?? string.Empty).StringConvertToDatetime(),
+                WinlostDatetime: (item!["winlost_datetime"]?.ToString() ?? string.Empty).StringConvertToDatetime(),
+                AdditionalData: item.ToJsonString())));
         }
 
         if (!betDetails.Any())

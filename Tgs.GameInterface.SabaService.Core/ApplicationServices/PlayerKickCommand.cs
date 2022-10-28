@@ -1,8 +1,7 @@
 ﻿namespace Tgs.GameInterface.SabaService.Core.ApplicationServices;
 
-public record GameBetDetailByTimeframeSettledQuery(
+public record PlayerKickCommand(
     Uri ApiUrl,
     string OperatorId,
     string VendorId,
-    DateTime StartTime,
-    DateTime EndTime);
+    string VendorMemberId);
