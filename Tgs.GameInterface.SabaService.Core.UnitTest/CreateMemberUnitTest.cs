@@ -12,9 +12,9 @@ public class CreateMemberUnitTest
     public async Task Player_Already_Exists()
     {
         var apiUrl = new Uri("http://h0i2tsa.bw6688.com/");
-        var vendorId = "kwmmuz6qqi";
-        var vendorMemberId = "4ucmqplxb029";
-        string operatorId = "ZF055PMW_develop";
+        var vendorId = "um5vspnzkx";
+        var vendorMemberId = "tg_4ucmqplxb029_test";
+        string operatorId = "tg";
         string firstName = "GPI";
         string lastName = "4ucmqplxb029";
         int oddsType = 2;
@@ -23,7 +23,7 @@ public class CreateMemberUnitTest
         decimal minTransfer = 0;
 
         var url = new Uri(apiUrl, "/api/CreateMember/");
-        var response = "{\"error_code\":2,\"message\":\"username dupliate or use unsupported characters\"}";
+        var response = "{\"error_code\":6,\"message\":\"Duplicate Vendor_Member_ID \"}";
         var handler = new MockHttpMessageHandler();
         _ = handler.Expect(HttpMethod.Post, url.ToString())
                         .Respond(HttpStatusCode.OK, new StringContent(response));
@@ -52,18 +52,18 @@ public class CreateMemberUnitTest
     public async Task Normal_Process()
     {
         var apiUrl = new Uri("http://h0i2tsa.bw6688.com/");
-        var vendorId = "kwmmuz6qqi";
-        var vendorMemberId = "4ucmqplxb029";
-        string operatorId = "ZF055PMW_develop";
+        var vendorId = "um5vspnzkx";
+        var vendorMemberId = "tg_4ucmqplxb029_test";
+        string operatorId = "tg";
         string firstName = "GPI";
         string lastName = "4ucmqplxb029";
         int oddsType = 2;
-        int currency = 13;
+        int currency = 20;
         decimal maxTransfer = 9999999999;
         decimal minTransfer = 0;
 
         var url = new Uri(apiUrl, "/api/CreateMember/");
-        var response = "{\"error_code\":0,\"message\":\"Successfully executed\"}";
+        var response = "{\"error_code\":0,\"message\":\"\"}";
         var handler = new MockHttpMessageHandler();
         _ = handler.Expect(HttpMethod.Post, url.ToString())
                         .Respond(HttpStatusCode.OK, new StringContent(response));
@@ -92,9 +92,9 @@ public class CreateMemberUnitTest
     public async Task Other_Errors()
     {
         var apiUrl = new Uri("http://h0i2tsa.bw6688.com/");
-        var vendorId = "kwmmuz6qqi";
-        var vendorMemberId = "4ucmqplxb029";
-        string operatorId = "ZF055PMW_develop";
+        var vendorId = "um5vspnzkx";
+        var vendorMemberId = "tg_4ucmqplxb029_test";
+        string operatorId = "tg";
         string firstName = "GPI";
         string lastName = "4ucmqplxb029";
         int oddsType = 2;

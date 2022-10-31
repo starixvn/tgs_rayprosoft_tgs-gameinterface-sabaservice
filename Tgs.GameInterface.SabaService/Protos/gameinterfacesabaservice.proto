@@ -1,0 +1,156 @@
+syntax = "proto3";
+
+import "phoenix/protobuf/decimal.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Tgs.GameInterface.SabaService.Protos";
+
+package GameInterfaceSabaService;
+
+// The greeting service definition.
+service  GameInterfaceSabaService{
+  // Sends a greeting
+  rpc PlayerCreate (PlayerCreateRequest) returns (BaseReply);
+  rpc PlayerBalance (PlayerBalanceRequest) returns (PlayerBalanceReply); 
+  rpc PlayerKick (PlayerKickRequest) returns (BaseReply);
+  rpc FundIn (FundRequest) returns (FundReply);
+  rpc FundOut (FundRequest) returns (FundReply);
+  rpc FundStatus(FundStatusRequest) returns (FundStatusReply);
+  rpc GameHistory ( GameHistoryRequest) returns ( GameHistoryReply);
+  rpc GameHistorySettled ( GameHistoryByTimeframeRequest) returns ( GameHistoryByTimeframeReply);
+  rpc GameHistoryUnsettled ( GameHistoryByTimeframeRequest) returns ( GameHistoryByTimeframeReply);
+  rpc GameUrl (GameUrlRequest) returns (GameUrlReply);
+}
+
+// The request message containing the user's name.
+message FundRequest {
+	string api_url = 1;
+	string operator_id = 2;
+	string vendor_id = 3;
+	string vendor_member_id = 4;
+	string vendor_transId = 5;
+	int32 currency = 6;
+	phoenix.protobuf.DecimalValue amount = 7;
+}
+
+message FundStatusRequest {
+	string api_url = 1;
+	string operator_id = 2;
+	string vendor_id = 3;
+	string vendor_transId = 4;
+}
+
+message PlayerBalanceRequest {
+	string api_url = 1;
+	string operator_id = 2;
+	string vendor_id = 3;
+	string vendor_member_id = 4;
+}
+
+message PlayerKickRequest {
+	string api_url = 1;
+	string operator_id = 2;
+	string vendor_id = 3;
+	string vendor_member_id = 4;
+}
+
+message PlayerCreateRequest {
+	string api_url = 1;
+	string operator_id = 2;
+	string vendor_id = 3;
+	string brand_code = 4;
+	string vendor_member_id = 5;
+	int32 odds_type = 6;
+	int32 currency = 7;
+}
+
+message GameHistoryByTimeframeRequest {
+	string api_url = 1;
+	string operator_id = 2;
+	string vendor_id = 3;
+	google.protobuf.Timestamp start_time = 4; 
+	google.protobuf.Timestamp end_time = 5;
+}
+
+message GameHistoryRequest {
+	string api_url = 1;
+	string operator_id = 2;
+	string vendor_id = 3;
+	int64 version_key = 4;
+}
+
+message GameUrlRequest {
+	string api_url = 1;
+	string operator_id = 2;
+	string vendor_id = 3;
+	string vendor_member_id = 4;
+	bool is_mobile = 5;
+}
+
+// The response message containing the greetings.
+message BaseReply{
+	bool status = 1;
+}
+
+message PlayerBalanceReply {
+	bool is_player_exist = 1;
+	phoenix.protobuf.DecimalValue balance = 2;
+}
+
+message FundReply {
+	bool check = 1;
+	bool is_order_exist = 2;
+	string vendor_trans_id = 3;
+    string actual_vendor_trans_id = 4;
+	int64 trans_id = 5;
+    phoenix.protobuf.DecimalValue balance = 6; 
+}
+
+message FundStatusReply {
+	bool retry = 1;
+	bool is_order_exist = 2;
+}
+
+message GameHistoryReply {
+	int64  last_version_key = 1;
+	repeated GameHistory items = 2;
+}
+
+message GameHistory {
+    string player_code = 1;
+    string external_round_id = 2;
+	bool is_cashout = 3;
+    bool is_closed = 4;
+    GameHistoryStatus status = 5;
+	google.protobuf.Timestamp external_created_on = 6;
+	google.protobuf.Timestamp external_closed_on = 7;
+	phoenix.protobuf.DecimalValue bet = 8;
+	phoenix.protobuf.DecimalValue valid_bet = 9;
+	phoenix.protobuf.DecimalValue player_win_loss = 10;
+	phoenix.protobuf.DecimalValue turnover = 11;
+	phoenix.protobuf.DecimalValue settle = 12;
+    string additional_data = 13;
+}
+
+message GameHistoryByTimeframeReply {
+	repeated GameHistory items = 1;
+}
+
+message GameUrlReply {
+	bool is_player_exist = 1;
+	string game_url = 2;
+}
+
+enum GameHistoryStatus{
+	GAME_HISTORY_STATUS_UNKNOWN = 0;
+	GAME_HISTORY_STATUS_WAITING  = 1;
+	GAME_HISTORY_STATUS_RUNNING = 2;
+	GAME_HISTORY_STATUS_VOID = 3;
+	GAME_HISTORY_STATUS_REFUND = 4;
+	GAME_HISTORY_STATUS_REJECT = 5;
+	GAME_HISTORY_STATUS_LOSE = 6;
+	GAME_HISTORY_STATUS_WON = 7;
+	GAME_HISTORY_STATUS_DRAW = 8;
+	GAME_HISTORY_STATUS_HALFWON = 9;
+	GAME_HISTORY_STATUS_HALFLOSE = 10;
+}
