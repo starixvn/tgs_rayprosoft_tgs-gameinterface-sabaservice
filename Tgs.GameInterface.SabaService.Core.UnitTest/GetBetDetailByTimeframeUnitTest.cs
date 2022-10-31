@@ -39,9 +39,9 @@ public class GetBetDetailByTimeframeUnitTest
 
         Assert.IsNotNull(actual);
         Assert.IsTrue(actual.Any());
-        Assert.IsTrue(actual.First().TransactionTime == DateTime.Parse("2022-10-27T01:50:00.643+04:00"));
+        Assert.IsTrue(actual.First().TransactionTime.ToUniversalTime() == DateTime.Parse("2022-10-27T01:50:00.643-04:00").ToUniversalTime());
         Assert.IsTrue(actual.First().SettlementTime == DateTime.UnixEpoch);
-        Assert.IsTrue(actual.First().WinlostDatetime == DateTime.Parse("2022-10-27T00:00:00+04:00"));
+        Assert.IsTrue(actual.First().WinlostDatetime.ToUniversalTime() == DateTime.Parse("2022-10-27T00:00:00-04:00").ToUniversalTime());
     }
 
     [TestMethod]
@@ -110,8 +110,8 @@ public class GetBetDetailByTimeframeUnitTest
 
         Assert.IsNotNull(actual);
         Assert.IsTrue(actual.Any());
-        Assert.IsTrue(actual.First().TransactionTime == DateTime.Parse("2022-10-27T01:50:00.643+04:00"));
-        Assert.IsTrue(actual.First().SettlementTime == DateTime.Parse("2022-10-27T03:52:22.907+04:00"));
-        Assert.IsTrue(actual.First().WinlostDatetime == DateTime.Parse("2022-10-27T00:00:00+04:00"));
+        Assert.IsTrue(actual.First().TransactionTime.ToUniversalTime() == DateTime.Parse("2022-10-27T01:50:00.643-04:00").ToUniversalTime());
+        Assert.IsTrue(actual.First().SettlementTime.ToUniversalTime() == DateTime.Parse("2022-10-27T03:52:22.907-04:00").ToUniversalTime());
+        Assert.IsTrue(actual.First().WinlostDatetime.ToUniversalTime() == DateTime.Parse("2022-10-27T00:00:00-04:00").ToUniversalTime());
     }
 }
