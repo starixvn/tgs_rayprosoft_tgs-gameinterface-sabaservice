@@ -98,14 +98,20 @@ internal class GameApiClient : IGameApiClient
         var data = jsonNode["Data"]?.AsArray().FirstOrDefault()
             ?? throw new Exception("取得點數失敗");
 
-        if (data["error_code"]?.GetValue<int>() is null or not 0)
+        var error_code = data["error_code"]?.GetValue<int>()
+            ?? throw new Exception("取得錯誤代碼為空值，造成取得點數失敗");
+
+
+        if (error_code is not 0 and not 6)
         {
-            return (data["error_code"]?.GetValue<int>() is null or not 2)
+            return (error_code is not 2)
                 ? throw new GameProviderResponseErrorException(jsonNode["errorCode"]?.ToString(), jsonNode["message"]?.ToString())
                 : new GetBalanceResult(false, 0);
         }
 
-        var balance = data["balance"]?.GetValue<decimal>()
+        var balance = error_code is 6
+            ? 0
+            : data["balance"]?.GetValue<decimal>()
              ?? throw new Exception("取得點數失敗");
 
         return new GetBalanceResult(true, balance);

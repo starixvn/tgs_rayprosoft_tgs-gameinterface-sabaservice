@@ -100,4 +100,36 @@ public class CheckUserBalanceUnitTest
                 .AsTask())
             .ConfigureAwait(false);
     }
+
+    [TestMethod]
+    public async Task User_Nerver_Transfer()
+    {
+        var apiUrl = new Uri("http://h0i2tsa.bw6688.com/");
+        var vendorId = "um5vspnzkx";
+        var vendorMemberId = "tg_4ucmqplxb029_test";
+        var walletType = GameWalletType.Sportsbook;
+
+        var url = new Uri(apiUrl, "/api/CheckUserBalance/");
+        var response = "{\"error_code\":0,\"message\":\"\",\"Data\":[{\"vendor_member_id\":\"tg_4ucmqplxb029_test\",\"balance\":null,\"bonus_balance\":null,\"outstanding\":null,\"currency\":20,\"error_code\":6}]}";
+        var handler = new MockHttpMessageHandler();
+        _ = handler.Expect(HttpMethod.Post, url.ToString())
+                        .Respond(HttpStatusCode.OK, new StringContent(response));
+
+        var fakeHttpClient = handler.ToHttpClient();
+        var fakeLog = NullLogger<GameApiClient>.Instance;
+
+        var sut = new GameApiClient(fakeHttpClient, fakeLog);
+
+        var actual = await sut
+            .CheckUserBalanceAsync(
+                apiUrl: apiUrl,
+                vendorId: vendorId,
+                vendorMemberId: vendorMemberId,
+                walletType: walletType)
+            .ConfigureAwait(false);
+
+        Assert.IsNotNull(actual);
+        Assert.IsTrue(actual.IsPlayerExist);
+        Assert.AreEqual(0m, actual.Balance);
+    }
 }
