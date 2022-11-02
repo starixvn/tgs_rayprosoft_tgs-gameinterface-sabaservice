@@ -257,7 +257,7 @@ internal class GameApiClient : IGameApiClient
             betDetails = betDetails.Concat(array.Select(item => new BetDetail(
                 TransId: item!["trans_id"]!.GetValue<long>(),
                 VendorMemberId: item!["vendor_member_id"]!.GetValue<string>(),
-                SportType: item!["sport_type"]!.GetValue<int>(),
+                SportType: item!["sport_type"]?.GetValue<int>() ?? 0,
                 TicketStatus: item!["ticket_status"]!.GetValue<string>(),
                 TicketExtraStatus: item["ticket_extra_status"]?.ToString(),
                 Stake: item!["stake"]!.GetValue<decimal>(),
@@ -276,7 +276,7 @@ internal class GameApiClient : IGameApiClient
             betDetails = betDetails.Concat(array.Select(item => new BetDetail(
                 TransId: item!["trans_id"]!.GetValue<long>(),
                 VendorMemberId: item!["vendor_member_id"]!.GetValue<string>(),
-                SportType: item!["sport_type"]!.GetValue<int>(),
+                 SportType: item!["sport_type"]?.GetValue<int>() ?? 0,
                 TicketStatus: item!["ticket_status"]!.GetValue<string>(),
                 TicketExtraStatus: item["ticket_extra_status"]?.ToString(),
                 Stake: item!["stake"]!.GetValue<decimal>(),
@@ -295,7 +295,7 @@ internal class GameApiClient : IGameApiClient
             betDetails = betDetails.Concat(array.Select(item => new BetDetail(
                 TransId: item!["trans_id"]!.GetValue<long>(),
                 VendorMemberId: item!["vendor_member_id"]!.GetValue<string>(),
-                SportType: item!["sport_type"]!.GetValue<int>(),
+                SportType: item!["sport_type"]?.GetValue<int>() ?? 0,
                 TicketStatus: item!["ticket_status"]!.GetValue<string>(),
                 TicketExtraStatus: item["ticket_extra_status"]?.ToString(),
                 Stake: item!["stake"]!.GetValue<decimal>(),
@@ -357,7 +357,7 @@ internal class GameApiClient : IGameApiClient
             betDetails = betDetails.Concat(array.Select(item => new BetDetail(
                 TransId: item!["trans_id"]!.GetValue<long>(),
                 VendorMemberId: item!["vendor_member_id"]!.GetValue<string>(),
-                SportType: item!["sport_type"]!.GetValue<int>(),
+                SportType: item!["sport_type"]?.GetValue<int>() ?? 0,
                 TicketStatus: item!["ticket_status"]!.GetValue<string>(),
                 TicketExtraStatus: item["ticket_extra_status"]?.ToString(),
                 Stake: item!["stake"]!.GetValue<decimal>(),
@@ -376,7 +376,7 @@ internal class GameApiClient : IGameApiClient
             betDetails = betDetails.Concat(array.Select(item => new BetDetail(
                 TransId: item!["trans_id"]!.GetValue<long>(),
                 VendorMemberId: item!["vendor_member_id"]!.GetValue<string>(),
-                SportType: item!["sport_type"]!.GetValue<int>(),
+                SportType: item!["sport_type"]?.GetValue<int>() ?? 0,
                 TicketStatus: item!["ticket_status"]!.GetValue<string>(),
                 TicketExtraStatus: item["ticket_extra_status"]?.ToString(),
                 Stake: item!["stake"]!.GetValue<decimal>(),
@@ -395,7 +395,7 @@ internal class GameApiClient : IGameApiClient
             betDetails = betDetails.Concat(array.Select(item => new BetDetail(
                 TransId: item!["trans_id"]!.GetValue<long>(),
                 VendorMemberId: item!["vendor_member_id"]!.GetValue<string>(),
-                SportType: item!["sport_type"]!.GetValue<int>(),
+                SportType: item!["sport_type"]?.GetValue<int>() ?? 0,
                 TicketStatus: item!["ticket_status"]!.GetValue<string>(),
                 TicketExtraStatus: item["ticket_extra_status"]?.ToString(),
                 Stake: item!["stake"]!.GetValue<decimal>(),

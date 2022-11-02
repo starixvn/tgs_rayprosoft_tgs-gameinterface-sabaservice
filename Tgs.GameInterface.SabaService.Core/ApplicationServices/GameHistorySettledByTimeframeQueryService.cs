@@ -52,7 +52,11 @@ internal class GameHistorySettledByTimeframeQueryService : IQueryService<GameHis
                 playerWinLoss = betDetail.WinlostAmount;
                 turnover = isCashout ? 0 : betDetail.Stake;
                 settle = betDetail.BuybackAmount ?? betDetail.WinlostAmount + betDetail.Stake;
-                externalClosedOn = betDetail.SportType < 100 ? betDetail.SettlementTime : betDetail.WinlostDatetime;
+                externalClosedOn = betDetail.SportType > 99
+                    ? betDetail.WinlostDatetime
+                    : betDetail.SettlementTime.ToUniversalTime() != DateTime.UnixEpoch
+                    ? betDetail.SettlementTime
+                    : betDetail.WinlostDatetime;
             }
 
             yield return new GameHistoryDetail(
