@@ -3,7 +3,6 @@ using Grpc.Core;
 using Tgs.GameInterface.SabaService.Core.ApplicationServices;
 using Tgs.GameInterface.SabaService.Protos;
 using Tgs.ServiceUtility;
-using Enum = System.Enum;
 
 namespace Tgs.GameInterface.SabaService.GrpcServices;
 

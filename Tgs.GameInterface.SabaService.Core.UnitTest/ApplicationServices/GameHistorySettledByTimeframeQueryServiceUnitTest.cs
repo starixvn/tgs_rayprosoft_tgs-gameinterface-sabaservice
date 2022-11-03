@@ -13,18 +13,21 @@ public class GameHistorySettledByTimeframeQueryServiceUnitTest
     public async Task Normal_Process()
     {
         var fakeGameApiClient = Substitute.For<IGameApiClient>();
-        var fakeVendorMember = new VendorMember(
+
+        var vendorMember = new VendorMember(
             Options.Create(new GameInterfaceSettingsOptions()
             {
                 ReleaseNamespace = "dev"
             }));
 
+        var gameHistoryCalculate = new GameHistoryCalculate(vendorMember);
+
         var query = new GameHistorySettledByTimeframeQuery(
-            ApiUrl: new Uri("http://h0i2tsa.bw6688.com/"),
-            OperatorId: "tg",
-            VendorId: "um5vspnzkx",
-            StartTime: DateTime.Parse("2022-10-27T15:50:00+08:00"),
-            EndTime: DateTime.Parse("2022-10-27T15:55:00+08:00"));
+                ApiUrl: new Uri("http://h0i2tsa.bw6688.com/"),
+                OperatorId: "tg",
+                VendorId: "um5vspnzkx",
+                StartTime: DateTime.Parse("2022-10-27T15:50:00+08:00"),
+                EndTime: DateTime.Parse("2022-10-27T15:55:00+08:00"));
 
         var result = new BetDetail[]
             {
@@ -53,7 +56,7 @@ public class GameHistorySettledByTimeframeQueryServiceUnitTest
 
         var sut = new GameHistorySettledByTimeframeQueryService(
             fakeGameApiClient,
-            fakeVendorMember);
+            gameHistoryCalculate);
 
         var actual = await sut
             .QueryAsync(query)

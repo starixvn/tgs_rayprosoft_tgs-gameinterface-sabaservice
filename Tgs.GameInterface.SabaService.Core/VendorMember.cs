@@ -2,7 +2,7 @@
 
 namespace Tgs.GameInterface.SabaService.Core;
 
-internal class VendorMember : IVendorMember
+internal class VendorMember
 {
     private readonly GameInterfaceSettingsOptions _gameInterfaceSettings;
 

@@ -1,4 +1,5 @@
-﻿using NSubstitute;
+﻿using Microsoft.Extensions.Options;
+using NSubstitute;
 using Tgs.GameInterface.SabaService.Core.ApplicationServices;
 
 namespace Tgs.GameInterface.SabaService.Core.UnitTest.ApplicationServices;
@@ -10,7 +11,11 @@ public class PlayerKickCommandServiceUnitTest
     public async Task Normal_Process()
     {
         var fakeGameApiClient = Substitute.For<IGameApiClient>();
-        var fakeVendorMember = Substitute.For<IVendorMember>();
+        var vendorMember = new VendorMember(
+            Options.Create(new GameInterfaceSettingsOptions()
+            {
+                ReleaseNamespace = "dev"
+            }));
 
         var command = new PlayerKickCommand(
             ApiUrl: new Uri("http://h0i2tsa.bw6688.com/"),
@@ -19,11 +24,6 @@ public class PlayerKickCommandServiceUnitTest
             VendorMemberId: "4ucmqplxb029");
 
         var vendorMemberId = $"{command.OperatorId}_{command.VendorMemberId}_test";
-        _ = fakeVendorMember
-            .ConvertToGameProviderMember(
-                operatorId: Arg.Is(command.OperatorId),
-                vendorMemberId: Arg.Is(command.VendorMemberId))
-            .Returns(vendorMemberId);
 
         _ = fakeGameApiClient
             .KickUserAsync(
@@ -33,7 +33,7 @@ public class PlayerKickCommandServiceUnitTest
 
         var sut = new PlayerKickCommandService(
             fakeGameApiClient,
-            fakeVendorMember);
+            vendorMember);
 
         await sut
          .ExecuteAsync(command)

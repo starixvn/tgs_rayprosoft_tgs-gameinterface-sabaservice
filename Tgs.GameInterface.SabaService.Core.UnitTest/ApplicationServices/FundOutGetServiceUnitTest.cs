@@ -11,7 +11,7 @@ public class FundOutGetServiceUnitTest
     public async Task Normal_Process()
     {
         var fakeGameApiClient = Substitute.For<IGameApiClient>();
-        var fakeVendorMember = Substitute.For<IVendorMember>();
+        var vendorMember = Substitute.For<VendorMember>();
 
         var query = new FundOutQuery(
             ApiUrl: new Uri("http://h0i2tsa.bw6688.com/"),
@@ -23,11 +23,6 @@ public class FundOutGetServiceUnitTest
             Amount: 1m);
 
         var vendorMemberId = $"{query.OperatorId}_{query.VendorMemberId}_test";
-        _ = fakeVendorMember
-            .ConvertToGameProviderMember(
-                operatorId: Arg.Is(query.OperatorId),
-                vendorMemberId: Arg.Is(query.VendorMemberId))
-            .Returns(vendorMemberId);
 
         var vendorTransId = $"{query.OperatorId}_{query.VendorTransId}";
 
@@ -54,7 +49,7 @@ public class FundOutGetServiceUnitTest
 
         var sut = new FundOutGetService(
             fakeGameApiClient,
-            fakeVendorMember);
+            vendorMember);
 
         var actual = await sut
             .GetAsync(query)

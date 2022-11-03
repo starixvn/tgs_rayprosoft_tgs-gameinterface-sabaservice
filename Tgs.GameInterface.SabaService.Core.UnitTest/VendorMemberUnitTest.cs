@@ -12,7 +12,7 @@ public class VendorMemberUnitTest
         {
             ReleaseNamespace = "dev"
         });
-        IVendorMember vendorMember = new VendorMember(options);
+        var vendorMember = new VendorMember(options);
 
         var actual = vendorMember.ConvertToGameProviderMember("tg", "4ucmqplxb029");
 
@@ -27,7 +27,7 @@ public class VendorMemberUnitTest
         {
             ReleaseNamespace = "prod"
         });
-        IVendorMember vendorMember = new VendorMember(options);
+        var vendorMember = new VendorMember(options);
 
         var actual = vendorMember.ConvertToGameProviderMember("tg", "4ucmqplxb029");
 
@@ -42,7 +42,7 @@ public class VendorMemberUnitTest
         {
             ReleaseNamespace = "staging"
         });
-        IVendorMember vendorMember = new VendorMember(options);
+        var vendorMember = new VendorMember(options);
 
         var actual = vendorMember.ConvertToGameProviderMember("tg", "4ucmqplxb029");
 
@@ -57,7 +57,7 @@ public class VendorMemberUnitTest
         {
             ReleaseNamespace = "dev"
         });
-        IVendorMember vendorMember = new VendorMember(options);
+        var vendorMember = new VendorMember(options);
 
         var actual = vendorMember.ConvertToPlatformMember("tg", "tg_4ucmqplxb029_test");
 
@@ -72,7 +72,7 @@ public class VendorMemberUnitTest
         {
             ReleaseNamespace = "prod"
         });
-        IVendorMember vendorMember = new VendorMember(options);
+        var vendorMember = new VendorMember(options);
 
         var actual = vendorMember.ConvertToPlatformMember("tg", "tg_4ucmqplxb029");
 

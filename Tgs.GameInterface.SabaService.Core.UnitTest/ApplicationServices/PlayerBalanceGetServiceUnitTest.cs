@@ -1,4 +1,5 @@
-﻿using NSubstitute;
+﻿using Microsoft.Extensions.Options;
+using NSubstitute;
 using Tgs.GameInterface.SabaService.Core.ApplicationServices;
 using Tgs.GameInterface.SabaService.Core.Models;
 
@@ -11,7 +12,12 @@ public class PlayerBalanceGetServiceUnitTest
     public async Task Normal_Process()
     {
         var fakeGameApiClient = Substitute.For<IGameApiClient>();
-        var fakeVendorMember = Substitute.For<IVendorMember>();
+
+        var vendorMember = new VendorMember(
+            Options.Create(new GameInterfaceSettingsOptions()
+            {
+                ReleaseNamespace = "dev"
+            }));
 
         var query = new PlayerBalanceQuery(
             ApiUrl: new Uri("http://h0i2tsa.bw6688.com/"),
@@ -20,11 +26,6 @@ public class PlayerBalanceGetServiceUnitTest
             VendorMemberId: "4ucmqplxb029");
 
         var vendorMemberId = $"{query.OperatorId}_{query.VendorMemberId}_test";
-        _ = fakeVendorMember
-            .ConvertToGameProviderMember(
-                operatorId: Arg.Is(query.OperatorId),
-                vendorMemberId: Arg.Is(query.VendorMemberId))
-            .Returns(vendorMemberId);
 
         var result = new GetBalanceResult(
             IsPlayerExist: true,
@@ -39,7 +40,7 @@ public class PlayerBalanceGetServiceUnitTest
 
         var sut = new PlayerBalanceGetService(
             fakeGameApiClient,
-            fakeVendorMember);
+            vendorMember);
 
         var actual = await sut
             .GetAsync(query)

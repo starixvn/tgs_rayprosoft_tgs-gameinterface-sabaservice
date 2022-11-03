@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Tgs.GameInterface.SabaService.Core.ApplicationServices;
-using Tgs.GameInterface.SabaService.Protos;
 using Tgs.GameInterface.SabaService.ViewModels;
 using Tgs.ServiceUtility;
 

@@ -101,7 +101,6 @@ internal class GameApiClient : IGameApiClient
         var error_code = data["error_code"]?.GetValue<int>()
             ?? throw new Exception("取得錯誤代碼為空值，造成取得點數失敗");
 
-
         if (error_code is not 0 and not 6)
         {
             return (error_code is not 2)

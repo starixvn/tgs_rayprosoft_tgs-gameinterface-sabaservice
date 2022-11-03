@@ -5,14 +5,14 @@ namespace Tgs.GameInterface.SabaService.Core.ApplicationServices;
 internal class GameHistoryGetService : IGetService<GameHistoryQuery, GameHistoryResult>
 {
     private readonly IGameApiClient _client;
-    private readonly IVendorMember _vendorMember;
+    private readonly GameHistoryCalculate _calculate;
 
     public GameHistoryGetService(
         IGameApiClient client,
-        IVendorMember vendorMember)
+        GameHistoryCalculate calculate)
     {
         _client = client ?? throw new ArgumentNullException(nameof(client));
-        _vendorMember = vendorMember ?? throw new ArgumentNullException(nameof(vendorMember));
+        _calculate = calculate ?? throw new ArgumentNullException(nameof(calculate));
     }
 
     public async ValueTask<GameHistoryResult> GetAsync(
@@ -37,41 +37,7 @@ internal class GameHistoryGetService : IGetService<GameHistoryQuery, GameHistory
         var betDetails = result.Details.Where(x => !x.TicketStatus.Equals("waiting", StringComparison.OrdinalIgnoreCase))
             .Select(betDetail =>
             {
-                var playerCode = _vendorMember.ConvertToPlatformMember(query.OperatorId, betDetail.VendorMemberId);
-                var isClosed = !betDetail.TicketStatus.Equals("running", StringComparison.OrdinalIgnoreCase);
-                var externalClosedOn = DateTime.UnixEpoch;
-                var validBet = betDetail.Stake;
-                var playerWinLoss = 0m;
-                var turnover = 0m;
-                var settle = 0m;
-                var isCashout = betDetail.BuybackAmount.HasValue;
-                if (isClosed)
-                {
-                    validBet = isCashout ? 0 : betDetail.Stake;
-                    playerWinLoss = betDetail.WinlostAmount;
-                    turnover = isCashout ? 0 : betDetail.Stake;
-                    settle = betDetail.BuybackAmount ?? betDetail.WinlostAmount + betDetail.Stake;
-                    externalClosedOn = betDetail.SportType > 99
-                        ? betDetail.WinlostDatetime
-                        : betDetail.SettlementTime.ToUniversalTime() != DateTime.UnixEpoch
-                        ? betDetail.SettlementTime
-                        : betDetail.WinlostDatetime;
-                }
-
-                return new GameHistoryDetail(
-                    PlayerCode: playerCode,
-                    ExternalRoundId: betDetail.TransId.ToString(),
-                    IsCashout: isCashout,
-                    IsClosed: isClosed,
-                    Status: betDetail.TicketStatus,
-                    ExternalCreatedOn: betDetail.TransactionTime,
-                    ExternalClosedOn: externalClosedOn,
-                    Bet: betDetail.Stake,
-                    ValidBet: validBet,
-                    PlayerWinLoss: playerWinLoss,
-                    Turnover: turnover,
-                    Settle: settle,
-                    AdditionalData: betDetail.AdditionalData);
+                return _calculate.Process(query.OperatorId, betDetail);
             });
 
         return new GameHistoryResult(
