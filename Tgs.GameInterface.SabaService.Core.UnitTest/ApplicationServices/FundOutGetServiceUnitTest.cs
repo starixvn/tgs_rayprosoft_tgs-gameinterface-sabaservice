@@ -1,4 +1,5 @@
-﻿using NSubstitute;
+﻿using Microsoft.Extensions.Options;
+using NSubstitute;
 using Tgs.GameInterface.SabaService.Core.ApplicationServices;
 using Tgs.GameInterface.SabaService.Core.Models;
 
@@ -11,7 +12,12 @@ public class FundOutGetServiceUnitTest
     public async Task Normal_Process()
     {
         var fakeGameApiClient = Substitute.For<IGameApiClient>();
-        var vendorMember = Substitute.For<VendorMember>();
+
+        var vendorMember = new VendorMember(
+            Options.Create(new GameInterfaceSettingsOptions()
+            {
+                ReleaseNamespace = "dev"
+            }));
 
         var query = new FundOutQuery(
             ApiUrl: new Uri("http://h0i2tsa.bw6688.com/"),

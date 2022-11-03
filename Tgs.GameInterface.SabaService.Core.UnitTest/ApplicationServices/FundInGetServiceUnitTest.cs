@@ -12,6 +12,7 @@ public class FundInGetServiceUnitTest
     public async Task Normal_Process()
     {
         var fakeGameApiClient = Substitute.For<IGameApiClient>();
+
         var vendorMember = new VendorMember(
             Options.Create(new GameInterfaceSettingsOptions()
             {
