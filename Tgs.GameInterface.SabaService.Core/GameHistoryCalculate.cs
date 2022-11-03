@@ -16,7 +16,9 @@ internal class GameHistoryCalculate
     {
         var playerCode = _vendorMember.ConvertToPlatformMember(operatorId, detail.VendorMemberId);
         var isClosed = !detail.TicketStatus.Equals("running", StringComparison.OrdinalIgnoreCase);
-        var isReject = detail.TicketStatus.Equals("reject", StringComparison.OrdinalIgnoreCase);
+        var isVoid = detail.TicketStatus.Equals("void", StringComparison.OrdinalIgnoreCase) ||
+                       detail.TicketStatus.Equals("reject", StringComparison.OrdinalIgnoreCase) ||
+                       detail.TicketStatus.Equals("refund", StringComparison.OrdinalIgnoreCase);
         var externalClosedOn = DateTime.UnixEpoch;
         var bet = detail.Stake;
         var validBet = detail.Stake;
@@ -27,10 +29,10 @@ internal class GameHistoryCalculate
 
         if (isClosed)
         {
-            validBet = isCashout ? 0 : !isReject ? detail.Stake : 0;
+            validBet = isCashout ? 0 : !isVoid ? detail.Stake : 0;
             playerWinLoss = detail.WinlostAmount;
-            turnover = isCashout ? 0 : !isReject ? detail.Stake : 0;
-            settle = detail.BuybackAmount ?? (!isReject ? detail.WinlostAmount + detail.Stake : 0);
+            turnover = isCashout ? 0 : !isVoid ? detail.Stake : 0;
+            settle = detail.BuybackAmount ?? (!isVoid ? detail.WinlostAmount + detail.Stake : 0);
             externalClosedOn = detail.SportType > 99
                 ? detail.WinlostDatetime
                 : detail.SettlementTime.ToUniversalTime() != DateTime.UnixEpoch
