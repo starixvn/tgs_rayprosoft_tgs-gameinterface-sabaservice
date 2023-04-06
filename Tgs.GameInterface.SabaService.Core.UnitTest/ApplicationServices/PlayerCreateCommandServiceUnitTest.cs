@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using NSubstitute;
+using NSubstitute.Core;
 using Tgs.GameInterface.SabaService.Core.ApplicationServices;
 
 namespace Tgs.GameInterface.SabaService.Core.UnitTest.ApplicationServices;
@@ -11,12 +12,7 @@ public class PlayerCreateCommandServiceUnitTest
     public async Task Normal_Process()
     {
         var fakeGameApiClient = Substitute.For<IGameApiClient>();
-
-        var vendorMember = new GameVendorMember(
-            Options.Create(new GameInterfaceSettingsOptions()
-            {
-                ReleaseNamespace = "dev"
-            }));
+        var fakeGameVendorMember = Substitute.For<IGameVendorMember>();
 
         var command = new PlayerCreateCommand(
             ApiUrl: new Uri("http://h0i2tsa.bw6688.com/"),
@@ -28,10 +24,15 @@ public class PlayerCreateCommandServiceUnitTest
             Currency: 20);
 
         var vendorMemberId = $"{command.OperatorId}_{command.VendorMemberId}_test";
+        _ = fakeGameVendorMember
+            .ConvertToGameProviderMember(
+               Arg.Is(command.OperatorId),
+               Arg.Is(command.VendorMemberId))
+            .Returns(vendorMemberId);
 
         var sut = new PlayerCreateCommandService(
             fakeGameApiClient,
-            vendorMember);
+            fakeGameVendorMember);
 
         await sut
            .ExecuteAsync(command)

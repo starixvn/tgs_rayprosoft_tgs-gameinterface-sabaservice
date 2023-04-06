@@ -5,11 +5,11 @@ namespace Tgs.GameInterface.SabaService.Core.ApplicationServices;
 internal class FundInGetService : IGetService<FundInQuery, FundResult>
 {
     private readonly IGameApiClient _client;
-    private readonly GameVendorMember _vendorMember;
+    private readonly IGameVendorMember _vendorMember;
 
     public FundInGetService(
         IGameApiClient client,
-        GameVendorMember vendorMember)
+        IGameVendorMember vendorMember)
     {
         _client = client ?? throw new ArgumentNullException(nameof(client));
         _vendorMember = vendorMember ?? throw new ArgumentNullException(nameof(vendorMember));

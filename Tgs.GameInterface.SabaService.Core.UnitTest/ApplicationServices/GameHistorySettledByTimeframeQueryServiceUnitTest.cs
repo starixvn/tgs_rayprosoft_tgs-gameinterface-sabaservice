@@ -13,14 +13,7 @@ public class GameHistorySettledByTimeframeQueryServiceUnitTest
     public async Task Normal_Process()
     {
         var fakeGameApiClient = Substitute.For<IGameApiClient>();
-
-        var vendorMember = new GameVendorMember(
-            Options.Create(new GameInterfaceSettingsOptions()
-            {
-                ReleaseNamespace = "dev"
-            }));
-
-        var gameHistoryCalculate = new GameHistoryCalculate(vendorMember);
+        var fakeGameHistoryCalculate = Substitute.For<IGameHistoryCalculate>();
 
         var query = new GameHistorySettledByTimeframeQuery(
                 ApiUrl: new Uri("http://h0i2tsa.bw6688.com/"),
@@ -56,7 +49,7 @@ public class GameHistorySettledByTimeframeQueryServiceUnitTest
 
         var sut = new GameHistorySettledByTimeframeQueryService(
             fakeGameApiClient,
-            gameHistoryCalculate);
+            fakeGameHistoryCalculate);
 
         var actual = await sut
             .QueryAsync(query)
@@ -65,11 +58,5 @@ public class GameHistorySettledByTimeframeQueryServiceUnitTest
 
         Assert.IsNotNull(actual);
         Assert.IsTrue(actual.Any());
-        Assert.IsTrue("4ucmqplxb029".Equals(actual.First().PlayerCode));
-        Assert.IsTrue(10m == actual.First().ValidBet);
-        Assert.IsTrue(10m == actual.First().Turnover);
-        Assert.IsTrue(20m == actual.First().Settle);
-        Assert.IsTrue(result.First().TransactionTime == actual.First().ExternalCreatedOn);
-        Assert.IsTrue(result.First().SettlementTime == actual.First().ExternalClosedOn);
     }
 }

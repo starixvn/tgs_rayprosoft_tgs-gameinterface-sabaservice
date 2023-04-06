@@ -12,12 +12,7 @@ public class GameUrlGetServiceUnitTest
     public async Task Normal_Process()
     {
         var fakeGameApiClient = Substitute.For<IGameApiClient>();
-
-        var vendorMember = new GameVendorMember(
-            Options.Create(new GameInterfaceSettingsOptions()
-            {
-                ReleaseNamespace = "dev"
-            }));
+        var fakeGameVendorMember = Substitute.For<IGameVendorMember>();
 
         var query = new GameUrlQuery(
             ApiUrl: new Uri("http://h0i2tsa.bw6688.com/"),
@@ -27,6 +22,11 @@ public class GameUrlGetServiceUnitTest
             IsMobile: false);
 
         var vendorMemberId = $"{query.OperatorId}_{query.VendorMemberId}_test";
+        _ = fakeGameVendorMember
+            .ConvertToGameProviderMember(
+               Arg.Is(query.OperatorId),
+               Arg.Is(query.VendorMemberId))
+            .Returns(vendorMemberId);
 
         var result = new GetGameUrlResult(
             IsPlayerExist: true,
@@ -41,7 +41,7 @@ public class GameUrlGetServiceUnitTest
 
         var sut = new GameUrlGetService(
             fakeGameApiClient,
-            vendorMember);
+            fakeGameVendorMember);
 
         var actual = await sut
             .GetAsync(query)
