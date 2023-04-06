@@ -7,41 +7,40 @@ using Tgs.GameInterface.SabaService.Core;
 
 namespace Tgs.GameInterface.SabaService.Controllers;
 
-[Route("api/[controller]")]
+[Route("[controller]")]
 [ApiController]
 public class InfoController : ControllerBase
 {
     private readonly GameInterfaceSettingsOptions _gameInterfaceSettings;
 
-    public InfoController(IOptions<GameInterfaceSettingsOptions> options)
+    public InfoController(
+        IOptions<GameInterfaceSettingsOptions> options)
     {
         _gameInterfaceSettings = options.Value;
     }
 
     [HttpGet]
-    public async ValueTask<object> Get([FromServices] IWebHostEnvironment environment)
+    public async ValueTask<object> GetAsync(
+        [FromServices] IWebHostEnvironment _hostingEnvironment)
     {
-        var hostEntry = await Dns.GetHostEntryAsync(Dns.GetHostName());
-        var hostIp = Array.Find(
-                (await Dns
-                    .GetHostEntryAsync(
-                        Dns.GetHostName())
-                    .ConfigureAwait(false))
-                    .AddressList, x => x.AddressFamily == AddressFamily.InterNetwork);
+        var hostName = Dns.GetHostName();
+        var hostEntry = await Dns.GetHostEntryAsync(hostName);
+        var hostIp = Array.Find(hostEntry.AddressList,
+            x => x.AddressFamily == AddressFamily.InterNetwork);
 
         return new
         {
             Environment.MachineName,
-            HostName = Dns.GetHostName(),
+            HostName = hostName,
             HostIp = hostIp?.ToString() ?? string.Empty,
-            environment.EnvironmentName,
-            IsDevelopment = environment.IsDevelopment(),
-            IsStaging = environment.IsStaging(),
-            IsProduction = environment.IsProduction(),
+            Environment = _hostingEnvironment.EnvironmentName,
             OsVersion = $"{Environment.OSVersion}",
             Version = Assembly.GetExecutingAssembly().GetName().Version?.ToString(),
-            Environment.ProcessorCount,
-            _gameInterfaceSettings.ReleaseNamespace
+            IsDevelopment = _hostingEnvironment.IsDevelopment(),
+            IsStaging = _hostingEnvironment.IsStaging(),
+            IsProduction = _hostingEnvironment.IsProduction(),
+            ProcessCount = Environment.ProcessorCount,
+            _gameInterfaceSettings.ReleaseNamespace,
         };
     }
 }

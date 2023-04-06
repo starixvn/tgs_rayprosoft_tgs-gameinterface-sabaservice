@@ -5,11 +5,11 @@ namespace Tgs.GameInterface.SabaService.Core.ApplicationServices;
 internal class GameHistoryGetService : IGetService<GameHistoryQuery, GameHistoryResult>
 {
     private readonly IGameApiClient _client;
-    private readonly GameHistoryCalculate _calculate;
+    private readonly IGameHistoryCalculate _calculate;
 
     public GameHistoryGetService(
         IGameApiClient client,
-        GameHistoryCalculate calculate)
+        IGameHistoryCalculate calculate)
     {
         _client = client ?? throw new ArgumentNullException(nameof(client));
         _calculate = calculate ?? throw new ArgumentNullException(nameof(calculate));
@@ -37,7 +37,7 @@ internal class GameHistoryGetService : IGetService<GameHistoryQuery, GameHistory
         var betDetails = result.Details.Where(x => !x.TicketStatus.Equals("waiting", StringComparison.OrdinalIgnoreCase))
             .Select(betDetail =>
             {
-                return _calculate.Process(query.OperatorId, betDetail);
+                return _calculate.Execute(query.OperatorId, betDetail);
             });
 
         return new GameHistoryResult(

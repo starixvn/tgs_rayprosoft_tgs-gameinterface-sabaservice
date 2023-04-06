@@ -3,7 +3,7 @@
 namespace Tgs.GameInterface.SabaService.Core.UnitTest;
 
 [TestClass]
-public class VendorMemberUnitTest
+public class GameVendorMemberUnitTest
 {
     [TestMethod]
     public void Convert_To_Game_Provider_Member_Dev_Environment()
@@ -12,7 +12,7 @@ public class VendorMemberUnitTest
         {
             ReleaseNamespace = "dev"
         });
-        var vendorMember = new VendorMember(options);
+        var vendorMember = new GameVendorMember(options);
 
         var actual = vendorMember.ConvertToGameProviderMember("tg", "4ucmqplxb029");
 
@@ -27,7 +27,7 @@ public class VendorMemberUnitTest
         {
             ReleaseNamespace = "prod"
         });
-        var vendorMember = new VendorMember(options);
+        var vendorMember = new GameVendorMember(options);
 
         var actual = vendorMember.ConvertToGameProviderMember("tg", "4ucmqplxb029");
 
@@ -42,7 +42,7 @@ public class VendorMemberUnitTest
         {
             ReleaseNamespace = "staging"
         });
-        var vendorMember = new VendorMember(options);
+        var vendorMember = new GameVendorMember(options);
 
         var actual = vendorMember.ConvertToGameProviderMember("tg", "4ucmqplxb029");
 
@@ -55,9 +55,9 @@ public class VendorMemberUnitTest
     {
         var options = Options.Create(new GameInterfaceSettingsOptions()
         {
-            ReleaseNamespace = "dev"
+            ReleaseNamespace = "prod"
         });
-        var vendorMember = new VendorMember(options);
+        var vendorMember = new GameVendorMember(options);
 
         var actual = vendorMember.ConvertToPlatformMember("tg", "tg_4ucmqplxb029_test");
 
@@ -72,7 +72,7 @@ public class VendorMemberUnitTest
         {
             ReleaseNamespace = "prod"
         });
-        var vendorMember = new VendorMember(options);
+        var vendorMember = new GameVendorMember(options);
 
         var actual = vendorMember.ConvertToPlatformMember("tg", "tg_4ucmqplxb029");
 

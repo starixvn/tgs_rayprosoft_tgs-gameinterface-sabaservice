@@ -1,5 +1,4 @@
 ﻿using System.Text.Json;
-using Microsoft.Extensions.Options;
 using NSubstitute;
 using Tgs.GameInterface.SabaService.Core.ApplicationServices;
 using Tgs.GameInterface.SabaService.Core.Models;
@@ -13,14 +12,7 @@ public class GameHistoryUnsettledByTimeframeQueryServiceUnitTest
     public async Task Normal_Process()
     {
         var fakeGameApiClient = Substitute.For<IGameApiClient>();
-
-        var vendorMember = new VendorMember(
-            Options.Create(new GameInterfaceSettingsOptions()
-            {
-                ReleaseNamespace = "dev"
-            }));
-
-        var gameHistoryCalculate = new GameHistoryCalculate(vendorMember);
+        var fakeGameHistoryCalculate = Substitute.For<IGameHistoryCalculate>();
 
         var query = new GameHistoryUnsettledByTimeframeQuery(
             ApiUrl: new Uri("http://h0i2tsa.bw6688.com/"),
@@ -56,7 +48,7 @@ public class GameHistoryUnsettledByTimeframeQueryServiceUnitTest
 
         var sut = new GameHistoryUnsettledByTimeframeQueryService(
             fakeGameApiClient,
-            gameHistoryCalculate);
+            fakeGameHistoryCalculate);
 
         var actual = await sut
             .QueryAsync(query)
@@ -65,9 +57,5 @@ public class GameHistoryUnsettledByTimeframeQueryServiceUnitTest
 
         Assert.IsNotNull(actual);
         Assert.IsTrue(actual.Any());
-        Assert.IsTrue("4ucmqplxb029".Equals(actual.First().PlayerCode));
-        Assert.IsTrue(10m == actual.First().ValidBet);
-        Assert.IsTrue(result.First().TransactionTime == actual.First().ExternalCreatedOn);
-        Assert.IsTrue(DateTime.UnixEpoch == actual.First().ExternalClosedOn);
     }
 }

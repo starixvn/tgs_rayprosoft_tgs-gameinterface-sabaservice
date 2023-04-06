@@ -6,11 +6,11 @@ namespace Tgs.GameInterface.SabaService.Core.ApplicationServices;
 internal class GameHistoryUnsettledByTimeframeQueryService : IQueryService<GameHistoryUnsettledByTimeframeQuery, GameHistoryDetail>
 {
     private readonly IGameApiClient _client;
-    private readonly GameHistoryCalculate _calculate;
+    private readonly IGameHistoryCalculate _calculate;
 
     public GameHistoryUnsettledByTimeframeQueryService(
         IGameApiClient client,
-        GameHistoryCalculate calculate)
+        IGameHistoryCalculate calculate)
     {
         _client = client ?? throw new ArgumentNullException(nameof(client));
         _calculate = calculate ?? throw new ArgumentNullException(nameof(calculate));
@@ -38,7 +38,7 @@ internal class GameHistoryUnsettledByTimeframeQueryService : IQueryService<GameH
 
         foreach (var betDetail in betDetails)
         {
-            yield return _calculate.Process(query.OperatorId, betDetail);
+            yield return _calculate.Execute(query.OperatorId, betDetail);
         }
     }
 }

@@ -5,11 +5,11 @@ namespace Tgs.GameInterface.SabaService.Core.ApplicationServices;
 internal class PlayerCreateCommandService : ICommandService<PlayerCreateCommand>
 {
     private readonly IGameApiClient _client;
-    private readonly VendorMember _vendorMember;
+    private readonly GameVendorMember _vendorMember;
 
     public PlayerCreateCommandService(
         IGameApiClient client,
-        VendorMember vendorMember)
+        GameVendorMember vendorMember)
     {
         _client = client ?? throw new ArgumentNullException(nameof(client));
         _vendorMember = vendorMember ?? throw new ArgumentNullException(nameof(vendorMember));

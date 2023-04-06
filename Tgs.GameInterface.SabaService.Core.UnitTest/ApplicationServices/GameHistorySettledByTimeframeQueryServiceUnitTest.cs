@@ -14,7 +14,7 @@ public class GameHistorySettledByTimeframeQueryServiceUnitTest
     {
         var fakeGameApiClient = Substitute.For<IGameApiClient>();
 
-        var vendorMember = new VendorMember(
+        var vendorMember = new GameVendorMember(
             Options.Create(new GameInterfaceSettingsOptions()
             {
                 ReleaseNamespace = "dev"
