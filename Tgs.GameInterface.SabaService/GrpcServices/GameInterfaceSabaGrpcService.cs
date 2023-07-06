@@ -8,6 +8,7 @@ namespace Tgs.GameInterface.SabaService.GrpcServices;
 
 public class GameInterfaceSabaGrpcService : GameInterfaceSabaService.GameInterfaceSabaServiceBase
 {
+    private readonly ILogger<GameInterfaceSabaGrpcService> _logger;
     private readonly IGetService<FundInQuery, FundResult> _fundInService;
     private readonly IGetService<FundOutQuery, FundResult> _fundOutService;
     private readonly IGetService<FundStatusQuery, FundStatusResult> _fundStatusService;
@@ -20,6 +21,7 @@ public class GameInterfaceSabaGrpcService : GameInterfaceSabaService.GameInterfa
     private readonly ICommandService<PlayerKickCommand> _playerKickService;
 
     public GameInterfaceSabaGrpcService(
+        ILogger<GameInterfaceSabaGrpcService> logger,
         IGetService<FundInQuery, FundResult> fundInService,
         IGetService<FundOutQuery, FundResult> fundOutService,
         IGetService<FundStatusQuery, FundStatusResult> fundStatusService,
@@ -31,6 +33,7 @@ public class GameInterfaceSabaGrpcService : GameInterfaceSabaService.GameInterfa
         ICommandService<PlayerCreateCommand> playerCreateService,
         ICommandService<PlayerKickCommand> playerKickService)
     {
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _fundInService = fundInService ?? throw new ArgumentNullException(nameof(fundInService));
         _fundOutService = fundOutService ?? throw new ArgumentNullException(nameof(fundOutService));
         _fundStatusService = fundStatusService ?? throw new ArgumentNullException(nameof(fundStatusService));
@@ -41,6 +44,16 @@ public class GameInterfaceSabaGrpcService : GameInterfaceSabaService.GameInterfa
         _playerBalanceService = playerBalanceService ?? throw new ArgumentNullException(nameof(playerBalanceService));
         _playerCreateService = playerCreateService ?? throw new ArgumentNullException(nameof(playerCreateService));
         _playerKickService = playerKickService ?? throw new ArgumentNullException(nameof(playerKickService));
+    }
+
+    public override Task<CheckingServiceReply> CheckingService(CheckingServiceRequest request, ServerCallContext context)
+    {
+        _logger.LogWarning("LogOn:{logOn} Message: Create a check connection.({machineName})", DateTime.Now.ToString("o"), request.MachineName);
+
+        return Task.FromResult(new CheckingServiceReply
+        {
+            MachineName = Environment.MachineName
+        });
     }
 
     public override async Task<FundReply> FundIn(FundRequest request, ServerCallContext context)

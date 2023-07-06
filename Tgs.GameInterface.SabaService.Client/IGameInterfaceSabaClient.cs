@@ -4,6 +4,10 @@ namespace Tgs.GameInterface.SabaService.Client;
 
 public interface IGameInterfaceSabaClient
 {
+    ValueTask<string> CheckingServiceAsync(
+        string machineName,
+        CancellationToken cancellationToken = default);
+
     ValueTask<FundReply> FundInAsync(
         Uri apiUrl,
         string operatorId,

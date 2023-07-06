@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Options;
-using NSubstitute;
+﻿using NSubstitute;
 using Tgs.GameInterface.SabaService.Core.ApplicationServices;
 using Tgs.GameInterface.SabaService.Core.Models;
 

@@ -7,16 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameInterface.SabaServi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameInterface.SabaService.Core", "Tgs.GameInterface.SabaService.Core\Tgs.GameInterface.SabaService.Core.csproj", "{E962BCCF-FDFE-4FB4-BB4C-3E684A80CBD7}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "方案項目", "方案項目", "{88926027-67B4-4B7A-AEA1-B6F929882BCC}"
-	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
-		CodeMaid.config = CodeMaid.config
-		nuget.config = nuget.config
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameInterface.SabaService.Core.UnitTest", "Tgs.GameInterface.SabaService.Core.UnitTest\Tgs.GameInterface.SabaService.Core.UnitTest.csproj", "{96BE81B8-A9B4-4B46-B8CF-DC759AB71A0F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tgs.GameInterface.SabaService.Client", "Tgs.GameInterface.SabaService.Client\Tgs.GameInterface.SabaService.Client.csproj", "{1812FD36-47E5-4FE5-A5B7-0CF369AC6E6E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameInterface.SabaService.Client", "Tgs.GameInterface.SabaService.Client\Tgs.GameInterface.SabaService.Client.csproj", "{1812FD36-47E5-4FE5-A5B7-0CF369AC6E6E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

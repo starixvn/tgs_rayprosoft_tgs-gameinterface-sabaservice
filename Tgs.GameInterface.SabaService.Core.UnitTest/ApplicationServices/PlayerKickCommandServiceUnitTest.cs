@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Options;
-using NSubstitute;
-using NSubstitute.Core;
+﻿using NSubstitute;
 using Tgs.GameInterface.SabaService.Core.ApplicationServices;
 
 namespace Tgs.GameInterface.SabaService.Core.UnitTest.ApplicationServices;

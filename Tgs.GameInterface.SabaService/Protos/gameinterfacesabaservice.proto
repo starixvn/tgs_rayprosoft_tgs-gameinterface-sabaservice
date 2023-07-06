@@ -1,4 +1,4 @@
-syntax = "proto3";
+﻿syntax = "proto3";
 
 import "phoenix/protobuf/decimal.proto";
 import "google/protobuf/timestamp.proto";
@@ -20,6 +20,7 @@ service  GameInterfaceSabaService{
   rpc GameHistorySettled ( GameHistoryByTimeframeRequest) returns ( GameHistoryByTimeframeReply);
   rpc GameHistoryUnsettled ( GameHistoryByTimeframeRequest) returns ( GameHistoryByTimeframeReply);
   rpc GameUrl (GameUrlRequest) returns (GameUrlReply);
+  rpc CheckingService(CheckingServiceRequest) returns (CheckingServiceReply);
 }
 
 // The request message containing the user's name.
@@ -87,6 +88,10 @@ message GameUrlRequest {
 	bool is_mobile = 5;
 }
 
+message CheckingServiceRequest{
+    string machine_name = 1;
+}
+
 // The response message containing the greetings.
 message BaseReply{
 	bool status = 1;
@@ -139,6 +144,10 @@ message GameHistoryByTimeframeReply {
 message GameUrlReply {
 	bool is_player_exist = 1;
 	string game_url = 2;
+}
+
+message CheckingServiceReply{
+    string machine_name = 1;
 }
 
 enum GameHistoryStatus{
