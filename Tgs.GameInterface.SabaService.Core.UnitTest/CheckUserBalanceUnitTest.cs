@@ -68,7 +68,8 @@ public class CheckUserBalanceUnitTest
 
         Assert.IsNotNull(actual);
         Assert.IsTrue(actual.IsPlayerExist);
-        Assert.AreEqual(100m, actual.Balance);
+        Assert.AreEqual(expected: 100m, actual: actual.Balance);
+        Assert.AreEqual(expected: 0, actual: actual.Outstanding);
     }
 
     [TestMethod]
@@ -131,5 +132,6 @@ public class CheckUserBalanceUnitTest
         Assert.IsNotNull(actual);
         Assert.IsTrue(actual.IsPlayerExist);
         Assert.AreEqual(0m, actual.Balance);
+        Assert.AreEqual(0m, actual.Outstanding);
     }
 }

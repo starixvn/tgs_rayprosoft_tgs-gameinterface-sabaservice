@@ -458,8 +458,10 @@ public class SabaController : ControllerBase
                  .ConfigureAwait(false);
 
         return new PlayerBalanceResultViewModel(
-            result.IsPlayerExist,
-            result.Balance);
+            IsPlayerExist: result.IsPlayerExist,
+            Balance: result.Balance,
+            FreeBalance: result.FreeBalance,
+            OutstandingBalance: result.OutstandingBalance);
     }
 
     /// <summary>

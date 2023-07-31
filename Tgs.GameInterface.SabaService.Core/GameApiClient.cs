@@ -105,7 +105,10 @@ internal class GameApiClient : IGameApiClient
         {
             return (error_code is not 2)
                 ? throw new GameProviderResponseErrorException(jsonNode["errorCode"]?.ToString(), jsonNode["message"]?.ToString())
-                : new GetBalanceResult(false, 0);
+                : new GetBalanceResult(
+                    IsPlayerExist: false,
+                    Balance: 0,
+                    Outstanding: 0);
         }
 
         var balance = error_code is 6
@@ -113,7 +116,12 @@ internal class GameApiClient : IGameApiClient
             : data["balance"]?.GetValue<decimal>()
              ?? throw new Exception("取得點數失敗");
 
-        return new GetBalanceResult(true, balance);
+        var outstanding = error_code is 6
+            ? 0
+            : data["outstanding"]?.GetValue<decimal>()
+             ?? throw new Exception("取得點數失敗");
+
+        return new GetBalanceResult(true, balance, outstanding);
     }
 
     public async ValueTask CreateMemberAsync(

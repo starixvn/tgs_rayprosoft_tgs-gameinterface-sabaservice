@@ -303,7 +303,9 @@ public class GameInterfaceSabaGrpcService : GameInterfaceSabaService.GameInterfa
         return new PlayerBalanceReply
         {
             IsPlayerExist = result.IsPlayerExist,
-            Balance = result.Balance
+            Balance = result.Balance,
+            FreeBalance = result.FreeBalance,
+            OutstandingBalance = result.OutstandingBalance
         };
     }
 

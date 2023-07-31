@@ -26,8 +26,11 @@ internal class PlayerBalanceGetService : IGetService<PlayerBalanceQuery, PlayerB
             walletType: GameWalletType.Sportsbook,
             cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        return new PlayerBalanceResult(
-             IsPlayerExist: result.IsPlayerExist,
-             Balance: result.Balance);
+        return new PlayerBalanceResult
+        {
+            IsPlayerExist = result.IsPlayerExist,
+            FreeBalance = result.Balance,
+            OutstandingBalance = result.Outstanding
+        };
     }
 }

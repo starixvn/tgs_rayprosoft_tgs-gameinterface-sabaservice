@@ -2,4 +2,5 @@
 
 public record GetBalanceResult(
     bool IsPlayerExist,
-    decimal Balance);
+    decimal Balance,
+    decimal Outstanding);

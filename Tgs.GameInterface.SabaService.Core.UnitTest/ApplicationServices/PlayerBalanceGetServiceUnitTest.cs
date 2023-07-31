@@ -26,9 +26,12 @@ public class PlayerBalanceGetServiceUnitTest
                Arg.Is(query.VendorMemberId))
             .Returns(vendorMemberId);
 
-        var result = new GetBalanceResult(
+        var result = new GetBalanceResult
+        (
             IsPlayerExist: true,
-            Balance: 100);
+            Balance: 99,
+            Outstanding: 1
+        );
         _ = fakeGameApiClient
             .CheckUserBalanceAsync(
                 apiUrl: Arg.Is(query.ApiUrl),
