@@ -2,24 +2,15 @@
 
 namespace Tgs.GameInterface.SabaService.Core.ApplicationServices;
 
-internal class GameHistoryGetService : IGetService<GameHistoryQuery, GameHistoryResult>
+internal class GameHistoryGetService(
+    IGameApiClient client,
+    IGameHistoryCalculate calculate) : IGetService<GameHistoryQuery, GameHistoryResult>
 {
-    private readonly IGameApiClient _client;
-    private readonly IGameHistoryCalculate _calculate;
-
-    public GameHistoryGetService(
-        IGameApiClient client,
-        IGameHistoryCalculate calculate)
-    {
-        _client = client ?? throw new ArgumentNullException(nameof(client));
-        _calculate = calculate ?? throw new ArgumentNullException(nameof(calculate));
-    }
-
     public async ValueTask<GameHistoryResult> GetAsync(
         GameHistoryQuery query,
         CancellationToken cancellationToken = default)
     {
-        var result = await _client
+        var result = await client
             .GetBetDetailAsync(
                 apiUrl: query.ApiUrl,
                 vendorId: query.VendorId,
@@ -37,7 +28,7 @@ internal class GameHistoryGetService : IGetService<GameHistoryQuery, GameHistory
         var betDetails = result.Details.Where(x => !x.TicketStatus.Equals("waiting", StringComparison.OrdinalIgnoreCase))
             .Select(betDetail =>
             {
-                return _calculate.Execute(query.OperatorId, betDetail);
+                return calculate.Execute(query.OperatorId, betDetail);
             });
 
         return new GameHistoryResult(

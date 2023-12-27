@@ -23,7 +23,7 @@ public class GameHistorySettledByTimeframeQueryServiceUnitTest
 
         var result = new BetDetail[]
             {
-                new BetDetail(
+                new(
                     TransId:DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
                     VendorMemberId:"tg_4ucmqplxb029_test",
                     SportType:1,
@@ -53,7 +53,8 @@ public class GameHistorySettledByTimeframeQueryServiceUnitTest
         var actual = await sut
             .QueryAsync(query)
             .ToArrayAsync()
-            .ConfigureAwait(false);
+            .ConfigureAwait(false)
+            ?? Enumerable.Empty<GameHistoryDetail>();
 
         Assert.IsNotNull(actual);
         Assert.IsTrue(actual.Any());

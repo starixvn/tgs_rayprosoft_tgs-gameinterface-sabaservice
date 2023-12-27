@@ -3,18 +3,11 @@ using Tgs.GameInterface.SabaService.Core.Models;
 
 namespace Tgs.GameInterface.SabaService.Core;
 
-internal class GameHistoryCalculate : IGameHistoryCalculate
+internal class GameHistoryCalculate(IGameVendorMember vendorMember) : IGameHistoryCalculate
 {
-    private readonly IGameVendorMember _vendorMember;
-
-    public GameHistoryCalculate(IGameVendorMember vendorMember)
-    {
-        _vendorMember = vendorMember ?? throw new ArgumentNullException(nameof(vendorMember));
-    }
-
     public GameHistoryDetail Execute(string operatorId, BetDetail detail)
     {
-        var playerCode = _vendorMember.ConvertToPlatformMember(operatorId, detail.VendorMemberId);
+        var playerCode = vendorMember.ConvertToPlatformMember(operatorId, detail.VendorMemberId);
         var isClosed = !detail.TicketStatus.Equals("running", StringComparison.OrdinalIgnoreCase);
         var isVoid = detail.TicketStatus.Equals("void", StringComparison.OrdinalIgnoreCase) ||
                        detail.TicketStatus.Equals("reject", StringComparison.OrdinalIgnoreCase) ||

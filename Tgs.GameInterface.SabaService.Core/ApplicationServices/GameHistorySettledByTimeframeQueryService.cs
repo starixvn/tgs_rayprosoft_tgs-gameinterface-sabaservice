@@ -1,26 +1,18 @@
 ﻿using System.Runtime.CompilerServices;
+using Tgs.GameInterface.SabaService.Core.Models;
 using Tgs.ServiceUtility;
 
 namespace Tgs.GameInterface.SabaService.Core.ApplicationServices;
 
-internal class GameHistorySettledByTimeframeQueryService : IQueryService<GameHistorySettledByTimeframeQuery, GameHistoryDetail>
+internal class GameHistorySettledByTimeframeQueryService(
+    IGameApiClient client,
+    IGameHistoryCalculate calculate) : IQueryService<GameHistorySettledByTimeframeQuery, GameHistoryDetail>
 {
-    private readonly IGameApiClient _client;
-    private readonly IGameHistoryCalculate _calculate;
-
-    public GameHistorySettledByTimeframeQueryService(
-        IGameApiClient client,
-        IGameHistoryCalculate calculate)
-    {
-        _client = client ?? throw new ArgumentNullException(nameof(client));
-        _calculate = calculate ?? throw new ArgumentNullException(nameof(calculate));
-    }
-
     public async IAsyncEnumerable<GameHistoryDetail> QueryAsync(
         GameHistorySettledByTimeframeQuery query,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        var betDetails = await _client
+        var betDetails = await client
             .GetBetDetailByTimeframeAsync(
                 apiUrl: query.ApiUrl,
                 vendorId: query.VendorId,
@@ -29,7 +21,8 @@ internal class GameHistorySettledByTimeframeQueryService : IQueryService<GameHis
                 endTime: query.EndTime,
                 cancellationToken: cancellationToken)
             .ToArrayAsync(cancellationToken: cancellationToken)
-            .ConfigureAwait(false);
+            .ConfigureAwait(false)
+            ?? Enumerable.Empty<BetDetail>();
 
         if (!betDetails.Any())
         {
@@ -38,7 +31,7 @@ internal class GameHistorySettledByTimeframeQueryService : IQueryService<GameHis
 
         foreach (var betDetail in betDetails)
         {
-            yield return _calculate.Execute(query.OperatorId, betDetail);
+            yield return calculate.Execute(query.OperatorId, betDetail);
         }
     }
 }

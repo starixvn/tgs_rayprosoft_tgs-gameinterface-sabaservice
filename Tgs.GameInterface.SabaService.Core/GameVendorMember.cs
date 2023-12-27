@@ -2,14 +2,9 @@
 
 namespace Tgs.GameInterface.SabaService.Core;
 
-internal class GameVendorMember : IGameVendorMember
+internal class GameVendorMember(IOptions<GameInterfaceSettingsOptions> options) : IGameVendorMember
 {
-    private readonly GameInterfaceSettingsOptions _gameInterfaceSettings;
-
-    public GameVendorMember(IOptions<GameInterfaceSettingsOptions> options)
-    {
-        _gameInterfaceSettings = options.Value;
-    }
+    private readonly GameInterfaceSettingsOptions _gameInterfaceSettings = options.Value;
 
     public string ConvertToPlatformMember(string operatorId, string vendorMemberId)
         => vendorMemberId.Replace(string.Format("{0}_", operatorId), string.Empty).Replace("_test", string.Empty);

@@ -2,25 +2,16 @@
 
 namespace Tgs.GameInterface.SabaService.Core.ApplicationServices;
 
-internal class FundOutGetService : IGetService<FundOutQuery, FundResult>
+internal class FundOutGetService(
+    IGameApiClient client,
+    IGameVendorMember vendorMember) : IGetService<FundOutQuery, FundResult>
 {
-    private readonly IGameApiClient _client;
-    private readonly IGameVendorMember _vendorMember;
-
-    public FundOutGetService(
-        IGameApiClient client,
-        IGameVendorMember vendorMember)
-    {
-        _client = client ?? throw new ArgumentNullException(nameof(client));
-        _vendorMember = vendorMember ?? throw new ArgumentNullException(nameof(vendorMember));
-    }
-
     public async ValueTask<FundResult> GetAsync(FundOutQuery query, CancellationToken cancellationToken = default)
     {
-        var vendorMemberId = _vendorMember.ConvertToGameProviderMember(query.OperatorId, query.VendorMemberId);
+        var vendorMemberId = vendorMember.ConvertToGameProviderMember(query.OperatorId, query.VendorMemberId);
         var vendorTransId = $"{query.OperatorId}_{query.VendorTransId}";
 
-        var result = await _client.FundTransferAsync(
+        var result = await client.FundTransferAsync(
             apiUrl: query.ApiUrl,
             vendorId: query.VendorId,
             vendorMemberId: vendorMemberId,

@@ -50,16 +50,16 @@ spec:
                   name: tgs-connections
                   key: nats
           volumeMounts:
-            - mountPath: /config/appsettings.json
+            - mountPath: /app/appsettings.Production.json
               name: appsettings
               readOnly: true
               subPath: appsettings.json
           ports:
-            - name: grpc
-              containerPort:  {{ .Values.servicegrpc.port }}
-              protocol: TCP
             - name: http
-              containerPort: {{ .Values.service.port }}
+              containerPort: {{ .Values.service.targetPort }}
+              protocol: TCP
+            - name: grpc
+              containerPort:  {{ .Values.service.grpc.targetPort }}
               protocol: TCP
           livenessProbe:
             httpGet:

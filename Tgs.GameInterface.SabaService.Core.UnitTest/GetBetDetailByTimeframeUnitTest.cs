@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using Microsoft.Extensions.Logging.Abstractions;
 using RichardSzalay.MockHttp;
+using Tgs.GameInterface.SabaService.Core.Models;
 
 namespace Tgs.GameInterface.SabaService.Core.UnitTest;
 
@@ -27,15 +28,15 @@ public class GetBetDetailByTimeframeUnitTest
 
         var sut = new GameApiClient(fakeHttpClient, fakeLog);
 
-        var actual = await sut
-            .GetBetDetailByTimeframeAsync(
-                apiUrl: apiUrl,
-                vendorId: vendorId,
-                timeType: timeType,
-                startTime: startDate,
-                endTime: endDate)
+        var actual = await sut.GetBetDetailByTimeframeAsync(
+            apiUrl: apiUrl,
+            vendorId: vendorId,
+            timeType: timeType,
+            startTime: startDate,
+            endTime: endDate)
             .ToArrayAsync()
-            .ConfigureAwait(false);
+            .ConfigureAwait(false)
+            ?? Enumerable.Empty<BetDetail>();
 
         Assert.IsNotNull(actual);
         Assert.IsTrue(actual.Any());
@@ -64,15 +65,15 @@ public class GetBetDetailByTimeframeUnitTest
 
         var sut = new GameApiClient(fakeHttpClient, fakeLog);
 
-        var actual = await sut
-            .GetBetDetailByTimeframeAsync(
-                apiUrl: apiUrl,
-                vendorId: vendorId,
-                timeType: timeType,
-                startTime: startDate,
-                endTime: endDate)
+        var actual = await sut.GetBetDetailByTimeframeAsync(
+            apiUrl: apiUrl,
+            vendorId: vendorId,
+            timeType: timeType,
+            startTime: startDate,
+            endTime: endDate)
             .ToArrayAsync()
-            .ConfigureAwait(false);
+            .ConfigureAwait(false)
+            ?? Enumerable.Empty<BetDetail>(); ;
 
         Assert.IsNotNull(actual);
         Assert.IsFalse(actual.Any());
@@ -98,15 +99,15 @@ public class GetBetDetailByTimeframeUnitTest
 
         var sut = new GameApiClient(fakeHttpClient, fakeLog);
 
-        var actual = await sut
-            .GetBetDetailByTimeframeAsync(
-                apiUrl: apiUrl,
-                vendorId: vendorId,
-                timeType: timeType,
-                startTime: startDate,
-                endTime: endDate)
+        var actual = await sut.GetBetDetailByTimeframeAsync(
+            apiUrl: apiUrl,
+            vendorId: vendorId,
+            timeType: timeType,
+            startTime: startDate,
+            endTime: endDate)
             .ToArrayAsync()
-            .ConfigureAwait(false);
+            .ConfigureAwait(false)
+            ?? Enumerable.Empty<BetDetail>();
 
         Assert.IsNotNull(actual);
         Assert.IsTrue(actual.Any());

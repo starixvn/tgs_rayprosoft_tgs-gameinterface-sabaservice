@@ -24,7 +24,7 @@ public class GameHistoryGetServiceUnitTest
             LastVersionKey: 2000,
             Details: new BetDetail[]
             {
-                new BetDetail(
+                new(
                     TransId:DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
                     VendorMemberId:"tg_4ucmqplxb029_test",
                     SportType:1,
@@ -75,7 +75,7 @@ public class GameHistoryGetServiceUnitTest
             LastVersionKey: 2000,
             Details: new BetDetail[]
             {
-                new BetDetail(
+                new(
                     TransId:DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
                     VendorMemberId:"tg_4ucmqplxb029_test",
                     SportType:1,
@@ -126,7 +126,7 @@ public class GameHistoryGetServiceUnitTest
             LastVersionKey: 2000,
             Details: new BetDetail[]
             {
-                new BetDetail(
+                new(
                     TransId:DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
                     VendorMemberId:"tg_4ucmqplxb029_test",
                     SportType:1,
@@ -177,7 +177,7 @@ public class GameHistoryGetServiceUnitTest
             LastVersionKey: 2000,
             Details: new BetDetail[]
             {
-                new BetDetail(
+                new(
                     TransId:DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
                     VendorMemberId:"tg_4ucmqplxb029_test",
                     SportType:1,
@@ -190,7 +190,7 @@ public class GameHistoryGetServiceUnitTest
                     SettlementTime:DateTime.UnixEpoch,
                     WinlostDatetime:DateTime.Today,
                     AdditionalData:JsonSerializer.Serialize(new{VendorMemberId="tg_4ucmqplxb029_test" })),
-                new BetDetail(
+                new(
                     TransId:DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
                     VendorMemberId:"tg_4ucmqplxb029_test",
                     SportType:1,
@@ -203,7 +203,7 @@ public class GameHistoryGetServiceUnitTest
                     SettlementTime:DateTime.UnixEpoch,
                     WinlostDatetime:DateTime.Today,
                     AdditionalData:JsonSerializer.Serialize(new{VendorMemberId="tg_4ucmqplxb029_test" })),
-                new BetDetail(
+                new(
                     TransId:DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
                     VendorMemberId:"tg_4ucmqplxb029_test",
                     SportType:1,

@@ -6,49 +6,22 @@ using Tgs.ServiceUtility;
 
 namespace Tgs.GameInterface.SabaService.GrpcServices;
 
-public class GameInterfaceSabaGrpcService : GameInterfaceSabaService.GameInterfaceSabaServiceBase
+public class GameInterfaceSabaGrpcService(
+    ILogger<GameInterfaceSabaGrpcService> logger,
+    IGetService<FundInQuery, FundResult> fundInService,
+    IGetService<FundOutQuery, FundResult> fundOutService,
+    IGetService<FundStatusQuery, FundStatusResult> fundStatusService,
+    IGetService<GameHistoryQuery, GameHistoryResult> gameHistoryService,
+    IQueryService<GameHistorySettledByTimeframeQuery, GameHistoryDetail> gameHistorySettledByTimeframeService,
+    IQueryService<GameHistoryUnsettledByTimeframeQuery, GameHistoryDetail> gameHistoryUnsettledByTimeframeService,
+    IGetService<GameUrlQuery, GameUrlResult> gameUrlService,
+    IGetService<PlayerBalanceQuery, PlayerBalanceResult> playerBalanceService,
+    ICommandService<PlayerCreateCommand> playerCreateService,
+    ICommandService<PlayerKickCommand> playerKickService) : GameInterfaceSabaService.GameInterfaceSabaServiceBase
 {
-    private readonly ILogger<GameInterfaceSabaGrpcService> _logger;
-    private readonly IGetService<FundInQuery, FundResult> _fundInService;
-    private readonly IGetService<FundOutQuery, FundResult> _fundOutService;
-    private readonly IGetService<FundStatusQuery, FundStatusResult> _fundStatusService;
-    private readonly IGetService<GameHistoryQuery, GameHistoryResult> _gameHistoryService;
-    private readonly IQueryService<GameHistorySettledByTimeframeQuery, GameHistoryDetail> _gameHistorySettledByTimeframeService;
-    private readonly IQueryService<GameHistoryUnsettledByTimeframeQuery, GameHistoryDetail> _gameHistoryUnsettledByTimeframeService;
-    private readonly IGetService<GameUrlQuery, GameUrlResult> _gameUrlService;
-    private readonly IGetService<PlayerBalanceQuery, PlayerBalanceResult> _playerBalanceService;
-    private readonly ICommandService<PlayerCreateCommand> _playerCreateService;
-    private readonly ICommandService<PlayerKickCommand> _playerKickService;
-
-    public GameInterfaceSabaGrpcService(
-        ILogger<GameInterfaceSabaGrpcService> logger,
-        IGetService<FundInQuery, FundResult> fundInService,
-        IGetService<FundOutQuery, FundResult> fundOutService,
-        IGetService<FundStatusQuery, FundStatusResult> fundStatusService,
-        IGetService<GameHistoryQuery, GameHistoryResult> gameHistoryService,
-        IQueryService<GameHistorySettledByTimeframeQuery, GameHistoryDetail> gameHistorySettledByTimeframeService,
-        IQueryService<GameHistoryUnsettledByTimeframeQuery, GameHistoryDetail> gameHistoryUnsettledByTimeframeService,
-        IGetService<GameUrlQuery, GameUrlResult> gameUrlService,
-        IGetService<PlayerBalanceQuery, PlayerBalanceResult> playerBalanceService,
-        ICommandService<PlayerCreateCommand> playerCreateService,
-        ICommandService<PlayerKickCommand> playerKickService)
-    {
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _fundInService = fundInService ?? throw new ArgumentNullException(nameof(fundInService));
-        _fundOutService = fundOutService ?? throw new ArgumentNullException(nameof(fundOutService));
-        _fundStatusService = fundStatusService ?? throw new ArgumentNullException(nameof(fundStatusService));
-        _gameHistoryService = gameHistoryService ?? throw new ArgumentNullException(nameof(gameHistoryService));
-        _gameHistorySettledByTimeframeService = gameHistorySettledByTimeframeService ?? throw new ArgumentNullException(nameof(gameHistorySettledByTimeframeService));
-        _gameHistoryUnsettledByTimeframeService = gameHistoryUnsettledByTimeframeService ?? throw new ArgumentNullException(nameof(gameHistoryUnsettledByTimeframeService));
-        _gameUrlService = gameUrlService ?? throw new ArgumentNullException(nameof(gameUrlService));
-        _playerBalanceService = playerBalanceService ?? throw new ArgumentNullException(nameof(playerBalanceService));
-        _playerCreateService = playerCreateService ?? throw new ArgumentNullException(nameof(playerCreateService));
-        _playerKickService = playerKickService ?? throw new ArgumentNullException(nameof(playerKickService));
-    }
-
     public override Task<CheckingServiceReply> CheckingService(CheckingServiceRequest request, ServerCallContext context)
     {
-        _logger.LogWarning("LogOn:{logOn} Message: Create a check connection.({machineName})", DateTime.Now.ToString("o"), request.MachineName);
+        logger.LogWarning("LogOn:{logOn} Message: Create a check connection.({machineName})", DateTime.Now.ToString("o"), request.MachineName);
 
         return Task.FromResult(new CheckingServiceReply
         {
@@ -67,7 +40,7 @@ public class GameInterfaceSabaGrpcService : GameInterfaceSabaService.GameInterfa
             Currency: request.Currency,
             Amount: request.Amount);
 
-        var result = await _fundInService
+        var result = await fundInService
                     .GetAsync(
                         query: query,
                         cancellationToken: context.CancellationToken)
@@ -95,7 +68,7 @@ public class GameInterfaceSabaGrpcService : GameInterfaceSabaService.GameInterfa
             Currency: request.Currency,
             Amount: request.Amount);
 
-        var result = await _fundOutService
+        var result = await fundOutService
                     .GetAsync(
                         query: query,
                         cancellationToken: context.CancellationToken)
@@ -120,7 +93,7 @@ public class GameInterfaceSabaGrpcService : GameInterfaceSabaService.GameInterfa
             VendorId: request.VendorId,
             VendorTransId: request.VendorTransId);
 
-        var result = await _fundStatusService
+        var result = await fundStatusService
                     .GetAsync(
                         query: query,
                         cancellationToken: context.CancellationToken)
@@ -141,7 +114,7 @@ public class GameInterfaceSabaGrpcService : GameInterfaceSabaService.GameInterfa
             VendorId: request.VendorId,
             VersionKey: request.VersionKey);
 
-        var result = await _gameHistoryService
+        var result = await gameHistoryService
                     .GetAsync(
                         query: query,
                         cancellationToken: context.CancellationToken)
@@ -185,12 +158,13 @@ public class GameInterfaceSabaGrpcService : GameInterfaceSabaService.GameInterfa
             StartTime: request.StartTime.ToDateTime(),
             EndTime: request.EndTime.ToDateTime());
 
-        var details = await _gameHistorySettledByTimeframeService
-                    .QueryAsync(
-                        query: query,
-                        cancellationToken: context.CancellationToken)
-                    .ToArrayAsync(cancellationToken: context.CancellationToken)
-                    .ConfigureAwait(false);
+        var details = await gameHistorySettledByTimeframeService
+            .QueryAsync(
+            query: query,
+            cancellationToken: context.CancellationToken)
+            .ToArrayAsync(cancellationToken: context.CancellationToken)
+            .ConfigureAwait(false)
+            ?? Enumerable.Empty<GameHistoryDetail>();
 
         var reply = new GameHistoryByTimeframeReply();
 
@@ -229,12 +203,12 @@ public class GameInterfaceSabaGrpcService : GameInterfaceSabaService.GameInterfa
             StartTime: request.StartTime.ToDateTime(),
             EndTime: request.EndTime.ToDateTime());
 
-        var details = await _gameHistoryUnsettledByTimeframeService
-                    .QueryAsync(
-                        query: query,
-                        cancellationToken: context.CancellationToken)
-                    .ToArrayAsync(cancellationToken: context.CancellationToken)
-                    .ConfigureAwait(false);
+        var details = await gameHistoryUnsettledByTimeframeService.QueryAsync(
+            query: query,
+            cancellationToken: context.CancellationToken)
+            .ToArrayAsync(cancellationToken: context.CancellationToken)
+            .ConfigureAwait(false)
+            ?? Enumerable.Empty<GameHistoryDetail>();
 
         var reply = new GameHistoryByTimeframeReply();
 
@@ -273,7 +247,7 @@ public class GameInterfaceSabaGrpcService : GameInterfaceSabaService.GameInterfa
             VendorMemberId: request.VendorMemberId,
             IsMobile: request.IsMobile);
 
-        var result = await _gameUrlService
+        var result = await gameUrlService
                     .GetAsync(
                         query: query,
                         cancellationToken: context.CancellationToken)
@@ -294,7 +268,7 @@ public class GameInterfaceSabaGrpcService : GameInterfaceSabaService.GameInterfa
             VendorId: request.VendorId,
             VendorMemberId: request.VendorMemberId);
 
-        var result = await _playerBalanceService
+        var result = await playerBalanceService
                     .GetAsync(
                         query: query,
                         cancellationToken: context.CancellationToken)
@@ -320,7 +294,7 @@ public class GameInterfaceSabaGrpcService : GameInterfaceSabaService.GameInterfa
             OddsType: request.OddsType,
             Currency: request.Currency);
 
-        await _playerCreateService
+        await playerCreateService
             .ExecuteAsync(
                 command: command,
                 cancellationToken: context.CancellationToken)
@@ -340,7 +314,7 @@ public class GameInterfaceSabaGrpcService : GameInterfaceSabaService.GameInterfa
             VendorId: request.VendorId,
             VendorMemberId: request.VendorMemberId);
 
-        await _playerKickService
+        await playerKickService
                 .ExecuteAsync(
                     command: command,
                     cancellationToken: context.CancellationToken)

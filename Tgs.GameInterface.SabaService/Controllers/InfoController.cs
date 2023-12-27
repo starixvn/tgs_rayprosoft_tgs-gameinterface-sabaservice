@@ -9,15 +9,10 @@ namespace Tgs.GameInterface.SabaService.Controllers;
 
 [Route("[controller]")]
 [ApiController]
-public class InfoController : ControllerBase
+public class InfoController(
+    IOptions<GameInterfaceSettingsOptions> options) : ControllerBase
 {
-    private readonly GameInterfaceSettingsOptions _gameInterfaceSettings;
-
-    public InfoController(
-        IOptions<GameInterfaceSettingsOptions> options)
-    {
-        _gameInterfaceSettings = options.Value;
-    }
+    private readonly GameInterfaceSettingsOptions _gameInterfaceSettings = options.Value;
 
     [HttpGet]
     public async ValueTask<object> GetAsync(

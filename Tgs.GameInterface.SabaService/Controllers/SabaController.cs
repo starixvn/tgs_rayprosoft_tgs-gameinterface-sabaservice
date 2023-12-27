@@ -287,13 +287,13 @@ public class SabaController : ControllerBase
             StartTime: source.StartTime,
             EndTime: source.EndTime);
 
-        var details = await service
-                .QueryAsync(
-                    query: query,
-                    cancellationToken: HttpContext.RequestAborted)
-                .ToArrayAsync(
-                    cancellationToken: HttpContext.RequestAborted)
-                .ConfigureAwait(false);
+        var details = await service.QueryAsync(
+            query: query,
+            cancellationToken: HttpContext.RequestAborted)
+            .ToArrayAsync(
+            cancellationToken: HttpContext.RequestAborted)
+            .ConfigureAwait(false)
+            ?? Enumerable.Empty<GameHistoryDetail>();
 
         if (!details.Any())
         {
@@ -350,13 +350,13 @@ public class SabaController : ControllerBase
             StartTime: source.StartTime,
             EndTime: source.EndTime);
 
-        var details = await service
-                .QueryAsync(
-                    query: query,
-                    cancellationToken: HttpContext.RequestAborted)
-                .ToArrayAsync(
-                    cancellationToken: HttpContext.RequestAborted)
-                .ConfigureAwait(false);
+        var details = await service.QueryAsync(
+            query: query,
+            cancellationToken: HttpContext.RequestAborted)
+            .ToArrayAsync(
+            cancellationToken: HttpContext.RequestAborted)
+            .ConfigureAwait(false)
+            ?? Enumerable.Empty<GameHistoryDetail>();
 
         if (!details.Any())
         {

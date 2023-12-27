@@ -4,20 +4,13 @@ using Tgs.GameInterface.SabaService.Protos;
 
 namespace Tgs.GameInterface.SabaService.Client;
 
-internal class GameInterfaceSabaClient : IGameInterfaceSabaClient
+internal class GameInterfaceSabaClient(GameInterfaceSabaService.GameInterfaceSabaServiceClient client) : IGameInterfaceSabaClient
 {
-    private readonly GameInterfaceSabaService.GameInterfaceSabaServiceClient _client;
-
-    public GameInterfaceSabaClient(GameInterfaceSabaService.GameInterfaceSabaServiceClient client)
-    {
-        _client = client ?? throw new ArgumentNullException(nameof(client));
-    }
-
     public async ValueTask<string> CheckingServiceAsync(
         string machineName,
         CancellationToken cancellationToken = default)
     {
-        var reply = await _client
+        var reply = await client
             .CheckingServiceAsync(
                 request: new CheckingServiceRequest
                 {
@@ -50,7 +43,7 @@ internal class GameInterfaceSabaClient : IGameInterfaceSabaClient
             Amount = amount
         };
 
-        return await _client
+        return await client
                 .FundInAsync(
                     request: request,
                     cancellationToken: cancellationToken)
@@ -78,7 +71,7 @@ internal class GameInterfaceSabaClient : IGameInterfaceSabaClient
             Amount = amount
         };
 
-        return await _client
+        return await client
                 .FundOutAsync(
                     request: request,
                     cancellationToken: cancellationToken)
@@ -100,7 +93,7 @@ internal class GameInterfaceSabaClient : IGameInterfaceSabaClient
             VendorTransId = vendorTransId
         };
 
-        return await _client
+        return await client
                 .FundStatusAsync(
                     request: request,
                     cancellationToken: cancellationToken)
@@ -122,7 +115,7 @@ internal class GameInterfaceSabaClient : IGameInterfaceSabaClient
             VersionKey = versionKey
         };
 
-        return await _client
+        return await client
                 .GameHistoryAsync(
                     request: request,
                     cancellationToken: cancellationToken)
@@ -146,18 +139,19 @@ internal class GameInterfaceSabaClient : IGameInterfaceSabaClient
             EndTime = endTime.ToTimestamp()
         };
 
-        var reply = await _client
-                .GameHistorySettledAsync(
-                    request: request,
-                    cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
+        var reply = await client.GameHistorySettledAsync(
+            request: request,
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
 
-        if (!reply.Items.Any())
+        var items = reply.Items ?? Enumerable.Empty<GameHistory>();
+
+        if (!items.Any())
         {
             yield break;
         }
 
-        foreach (var item in reply.Items)
+        foreach (var item in items)
         {
             yield return item;
         }
@@ -180,18 +174,19 @@ internal class GameInterfaceSabaClient : IGameInterfaceSabaClient
             EndTime = endTime.ToTimestamp()
         };
 
-        var reply = await _client
-                .GameHistoryUnsettledAsync(
-                    request: request,
-                    cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
+        var reply = await client.GameHistoryUnsettledAsync(
+            request: request,
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
 
-        if (!reply.Items.Any())
+        var items = reply.Items ?? Enumerable.Empty<GameHistory>();
+
+        if (!items.Any())
         {
             yield break;
         }
 
-        foreach (var item in reply.Items)
+        foreach (var item in items)
         {
             yield return item;
         }
@@ -214,7 +209,7 @@ internal class GameInterfaceSabaClient : IGameInterfaceSabaClient
             IsMobile = isMobile,
         };
 
-        return await _client
+        return await client
                 .GameUrlAsync(
                     request: request,
                     cancellationToken: cancellationToken)
@@ -236,7 +231,7 @@ internal class GameInterfaceSabaClient : IGameInterfaceSabaClient
             VendorMemberId = vendorMemberId
         };
 
-        return await _client
+        return await client
                 .PlayerBalanceAsync(
                     request: request,
                     cancellationToken: cancellationToken)
@@ -264,7 +259,7 @@ internal class GameInterfaceSabaClient : IGameInterfaceSabaClient
             Currency = currency
         };
 
-        _ = await _client
+        _ = await client
                 .PlayerCreateAsync(
                     request: request,
                     cancellationToken: cancellationToken)
@@ -286,7 +281,7 @@ internal class GameInterfaceSabaClient : IGameInterfaceSabaClient
             VendorMemberId = vendorMemberId
         };
 
-        _ = await _client
+        _ = await client
                 .PlayerKickAsync(
                     request: request,
                     cancellationToken: cancellationToken)
