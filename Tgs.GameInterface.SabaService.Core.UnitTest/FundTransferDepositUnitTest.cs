@@ -49,6 +49,49 @@ public class FundTransferDepositUnitTest
     }
 
     [TestMethod]
+    public async Task Bonus_before_amount_is_null()
+    {
+        var apiUrl = new Uri("http://h0i2tsa.bw6688.com/");
+        var vendorId = "um5vspnzkx";
+        var vendorMemberId = "tg_4ucmqplxb029_test";
+        var vendorTransId = $"tg_{Guid.NewGuid():N}";
+        var directionType = GameDirectionType.Deposit;
+        var walletType = GameWalletType.Sportsbook;
+        var currency = 20;
+        var amount = 1m;
+
+        var url = new Uri(apiUrl, "/api/FundTransfer/");
+        var response = "{\"error_code\":0,\"message\":\"Success\",\"Data\":{\"trans_id\":43,\"before_amount\":987.5,\"after_amount\":0.5,\"system_id\":\"PegaINH03S002\",\"status\":0}}";
+        var handler = new MockHttpMessageHandler();
+        _ = handler.Expect(HttpMethod.Post, url.ToString())
+                        .Respond(HttpStatusCode.OK, new StringContent(response));
+
+        var fakeHttpClient = handler.ToHttpClient();
+        var fakeLog = NullLogger<GameApiClient>.Instance;
+
+        var sut = new GameApiClient(fakeHttpClient, fakeLog);
+
+        var actual = await sut
+            .FundTransferAsync(
+                apiUrl: apiUrl,
+                vendorId: vendorId,
+                vendorMemberId: vendorMemberId,
+                vendorTransId: vendorTransId,
+                directionType: directionType,
+                walletType: walletType,
+                currency: currency,
+                amount: amount)
+            .ConfigureAwait(false);
+
+        Assert.IsNotNull(actual);
+        Assert.IsTrue(actual.IsOrderExist);
+        Assert.AreEqual(987.5m, actual.BeforeAmount);
+        Assert.AreEqual(0.5m, actual.AfterAmount);
+        Assert.AreEqual(0.0m, actual.BonusBeforeAmount);
+        Assert.AreEqual(0.0m, actual.BonusAfterAmount);
+    }
+
+    [TestMethod]
     public async Task Pending()
     {
         var apiUrl = new Uri("http://h0i2tsa.bw6688.com/");
