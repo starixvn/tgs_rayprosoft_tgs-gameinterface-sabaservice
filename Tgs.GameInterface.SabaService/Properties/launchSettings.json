@@ -1,32 +1,4 @@
 ﻿{
-  "profiles": {
-    "Tgs.GameInterface.SabaService": {
-      "commandName": "Project",
-      "launchBrowser": true,
-      "launchUrl": "swagger",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "OTEL_SERVICE_NAME": "Game-GameInterface-Saba-Service(local)",
-        "NODE_IP": "otel.rpgp.cc",
-        "RELEASE_NAMESPACE": "dev"
-      },
-      "dotnetRunMessages": true,
-      "applicationUrl": "https://localhost:7253;http://localhost:5253"
-    },
-    "Docker": {
-      "commandName": "Docker",
-      "launchBrowser": true,
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
-      "publishAllPorts": true,
-      "useSSL": true,
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "OTEL_SERVICE_NAME": "Game-GameInterface-Saba-Service(local)",
-        "NODE_IP": "otel.rpgp.cc",
-        "RELEASE_NAMESPACE": "dev"
-      }
-    }
-  },
   "$schema": "https://json.schemastore.org/launchsettings.json",
   "iisSettings": {
     "windowsAuthentication": false,
@@ -34,6 +6,36 @@
     "iisExpress": {
       "applicationUrl": "http://localhost:55598",
       "sslPort": 44383
+    }
+  },
+  "profiles": {
+    "http": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "applicationUrl": "http://localhost:5253",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "OTEL_SERVICE_NAME": "Game-GameInterface-Saba-Service(local)",
+        "NODE_IP": "otel.rpgp.cc",
+        "RELEASE_NAMESPACE": "dev",
+        "POD_IP": "127.0.0.1"
+      }
+    },
+    "https": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "applicationUrl": "https://localhost:7253;http://localhost:5253",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "OTEL_SERVICE_NAME": "Game-GameInterface-Saba-Service(local)",
+        "NODE_IP": "otel.rpgp.cc",
+        "RELEASE_NAMESPACE": "dev",
+        "POD_IP": "127.0.0.1"
+      }
     }
   }
 }

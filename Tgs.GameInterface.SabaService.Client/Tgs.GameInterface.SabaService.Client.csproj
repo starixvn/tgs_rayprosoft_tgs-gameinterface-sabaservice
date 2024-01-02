@@ -7,13 +7,16 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<Version>0.0.11</Version>
+		<Version>0.0.12</Version>
 		<Authors>Raypro</Authors>
-		<Description>Tgs GameInterface Saba Client</Description>
 		<PackageProjectUrl>https://gitlab.com/rayprosoft/tgs-gameinterface-sabaservice</PackageProjectUrl>
 		<RepositoryUrl>https://gitlab.com/rayprosoft/tgs-gameinterface-sabaservice.git</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
-		<PackageTags>Tgs GameInterface SabaService</PackageTags>
+		<RootNamespace>Tgs.GameInterface.SabaService.Client</RootNamespace>
+		<PackageId>Tgs.GameInterface.SabaService.Client</PackageId>
+		<Title>Tgs.GameInterface.SabaService.Client</Title>
+		<Description>Tgs.GameInterface.SabaService.Client</Description>
+		<PackageTags>Tgs GameInterface SabaService Client</PackageTags>
 	</PropertyGroup>
 
 	<ItemGroup>

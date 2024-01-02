@@ -47,7 +47,6 @@ Selector labels
 */}}
 {{- define "game-gameinterface-saba-service.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "game-gameinterface-saba-service.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
 app: {{ include "game-gameinterface-saba-service.name" . }}
 tgs.kind: game
 tgs.game.kind: gameinterface

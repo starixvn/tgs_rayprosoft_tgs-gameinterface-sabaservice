@@ -4,8 +4,6 @@ metadata:
   name: {{ include "game-gameinterface-saba-service.fullname" . }}
   labels:
     {{- include "game-gameinterface-saba-service.labels" . | nindent 4 }}
-  annotations:
-    reloader.stakater.com/auto: "true"
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
@@ -20,7 +18,10 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "game-gameinterface-saba-service.selectorLabels" . | nindent 8 }}
+        {{- include "game-gameinterface-saba-service.labels" . | nindent 8 }}
+	{{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -38,17 +39,16 @@ spec:
           env:
             - name: OTEL_SERVICE_NAME
               value: Game-GameInterface-Saba-Service({{ .Release.Namespace }})
-            - name: RELEASE_NAMESPACE
-              value: {{ .Release.Namespace }}
             - name: NODE_IP
               valueFrom:
                 fieldRef:
                   fieldPath: status.hostIP
-            - name: ConnectionStrings__Nats
+            - name: RELEASE_NAMESPACE
+              value: {{ .Release.Namespace }}
+            - name: POD_IP
               valueFrom:
-                secretKeyRef:
-                  name: tgs-connections
-                  key: nats
+               fieldRef:
+                fieldPath: status.podIP 
           volumeMounts:
             - mountPath: /app/appsettings.Production.json
               name: appsettings
@@ -64,9 +64,9 @@ spec:
           livenessProbe:
             httpGet:
               path: /healthz
-              port:  http
-            initialDelaySeconds: 5
-            periodSeconds: 5
+              port: http
+            failureThreshold: 5
+            periodSeconds: 60
           startupProbe:
             httpGet:
               path: /healthz
