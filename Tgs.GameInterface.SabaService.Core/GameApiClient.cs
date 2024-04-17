@@ -484,7 +484,7 @@ internal class GameApiClient(
 
         HttpContent content = new FormUrlEncodedContent(parameters);
 
-        var httpResponseMessage = await client.PostAsync(apiUrl, content, cancellationToken);
+        var httpResponseMessage = await client.PostAsync(apiUrl, content, cancellationToken).ConfigureAwait(false);
 
         sw.Stop();
 
