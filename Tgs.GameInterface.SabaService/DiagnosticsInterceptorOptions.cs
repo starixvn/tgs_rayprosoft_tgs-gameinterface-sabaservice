@@ -4,6 +4,5 @@ namespace Tgs.GameInterface.SabaService;
 
 public class DiagnosticsInterceptorOptions
 {
-    public ActivitySource InterceptorActivitySource { get; set; } =
-        new ActivitySource($"Tgs.GameInterface.SabaService.DiagnosticsInterceptor");
+	public ActivitySource InterceptorActivitySource { get; set; } = new ActivitySource(typeof(DiagnosticsInterceptorOptions).FullName!);
 }
