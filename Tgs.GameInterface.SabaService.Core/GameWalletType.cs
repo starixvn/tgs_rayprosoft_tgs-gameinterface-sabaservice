@@ -2,6 +2,6 @@
 
 public enum GameWalletType
 {
-    Sportsbook = 1,
-    AG = 5
+	Sportsbook = 1,
+	AG = 5
 }

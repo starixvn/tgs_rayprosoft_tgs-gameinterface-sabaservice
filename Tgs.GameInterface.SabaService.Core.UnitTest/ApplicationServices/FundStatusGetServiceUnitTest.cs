@@ -4,42 +4,39 @@ using Tgs.GameInterface.SabaService.Core.Models;
 
 namespace Tgs.GameInterface.SabaService.Core.UnitTest.ApplicationServices;
 
-[TestClass]
 public class FundStatusGetServiceUnitTest
 {
-    [TestMethod]
-    public async Task Normal_Process()
-    {
-        var fakeGameApiClient = Substitute.For<IGameApiClient>();
+	[Fact]
+	public async Task Normal_Process()
+	{
+		var fakeGameApiClient = Substitute.For<IGameApiClient>();
 
-        var query = new FundStatusQuery(
-            ApiUrl: new Uri("http://h0i2tsa.bw6688.com/"),
-            OperatorId: "tg",
-            VendorId: "um5vspnzkx",
-            VendorTransId: Guid.NewGuid().ToString("N"));
+		var query = new FundStatusQuery(
+			ApiUrl: new Uri("http://h0i2tsa.bw6688.com/"),
+			OperatorId: "tg",
+			VendorId: "um5vspnzkx",
+			OrderId: Guid.NewGuid().ToString("N"));
 
-        var vendorTransId = $"{query.OperatorId}_{query.VendorTransId}";
+		var vendorTransId = $"{query.OperatorId}_{query.OrderId}";
 
-        var result = new CheckFundTransferResult(
-                    Retry: false,
-                    IsOrderExist: true);
-        _ = fakeGameApiClient
-            .CheckFundTransferAsync(
-                apiUrl: Arg.Is(query.ApiUrl),
-                vendorId: Arg.Is(query.VendorId),
-                vendorTransId: Arg.Is(vendorTransId),
-                walletType: Arg.Is(GameWalletType.Sportsbook))
-            .Returns(result);
+		var result = new CheckFundTransferResult(
+			Retry: false,
+			IsOrderExist: true);
+		_ = fakeGameApiClient
+			.CheckFundTransferAsync(
+				apiUrl: Arg.Is(query.ApiUrl),
+				vendorId: Arg.Is(query.VendorId),
+				vendorTransId: Arg.Is(vendorTransId),
+				walletType: Arg.Is(GameWalletType.Sportsbook))
+			.Returns(result);
 
-        var sut = new FundStatusGetService(
-            fakeGameApiClient);
+		var sut = new FundStatusGetService(
+			fakeGameApiClient);
 
-        var actual = await sut
-            .GetAsync(query)
-            .ConfigureAwait(false);
+		var actual = await sut.GetAsync(query);
 
-        Assert.IsNotNull(actual);
-        Assert.IsTrue(actual.IsOrderExist);
-        Assert.IsFalse(actual.Retry);
-    }
+		Assert.NotNull(actual);
+		Assert.True(actual.IsOrderExist);
+		Assert.False(actual.Retry);
+	}
 }

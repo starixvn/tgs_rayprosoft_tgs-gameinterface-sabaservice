@@ -5,5 +5,5 @@ namespace Tgs.GameInterface.SabaService.Core;
 
 public interface IGameHistoryCalculate
 {
-    GameHistoryDetail Execute(string operatorId, BetDetail detail);
+	GameHistoryDetail Execute(string operatorId, BetDetail detail);
 }

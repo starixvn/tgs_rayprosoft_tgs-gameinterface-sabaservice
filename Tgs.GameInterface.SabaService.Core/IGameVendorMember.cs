@@ -2,7 +2,7 @@
 
 public interface IGameVendorMember
 {
-    string ConvertToPlatformMember(string operatorId, string vendorMemberId);
+	string ConvertToPlatformMember(string operatorId, string vendorMemberId);
 
-    string ConvertToGameProviderMember(string operatorId, string vendorMemberId);
+	string ConvertToGameProviderMember(string operatorId, string vendorMemberId);
 }

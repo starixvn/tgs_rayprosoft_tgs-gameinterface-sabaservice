@@ -4,51 +4,48 @@ using Tgs.GameInterface.SabaService.Core.Models;
 
 namespace Tgs.GameInterface.SabaService.Core.UnitTest.ApplicationServices;
 
-[TestClass]
 public class PlayerBalanceGetServiceUnitTest
 {
-    [TestMethod]
-    public async Task Normal_Process()
-    {
-        var fakeGameApiClient = Substitute.For<IGameApiClient>();
-        var fakeGameVendorMember = Substitute.For<IGameVendorMember>();
+	[Fact]
+	public async Task Normal_Process()
+	{
+		var fakeGameApiClient = Substitute.For<IGameApiClient>();
+		var fakeGameVendorMember = Substitute.For<IGameVendorMember>();
 
-        var query = new PlayerBalanceQuery(
-            ApiUrl: new Uri("http://h0i2tsa.bw6688.com/"),
-            OperatorId: "tg",
-            VendorId: "um5vspnzkx",
-            VendorMemberId: "4ucmqplxb029");
+		var query = new PlayerBalanceQuery(
+			ApiUrl: new Uri("http://h0i2tsa.bw6688.com/"),
+			OperatorId: "tg",
+			VendorId: "um5vspnzkx",
+			PlayerCode: "4ucmqplxb029");
 
-        var vendorMemberId = $"{query.OperatorId}_{query.VendorMemberId}_test";
-        _ = fakeGameVendorMember
-            .ConvertToGameProviderMember(
-               Arg.Is(query.OperatorId),
-               Arg.Is(query.VendorMemberId))
-            .Returns(vendorMemberId);
+		var vendorMemberId = $"{query.OperatorId}_{query.PlayerCode}_test";
+		_ = fakeGameVendorMember
+			.ConvertToGameProviderMember(
+			   Arg.Is(query.OperatorId),
+			   Arg.Is(query.PlayerCode))
+			.Returns(vendorMemberId);
 
-        var result = new GetBalanceResult
-        (
-            IsPlayerExist: true,
-            Balance: 99,
-            Outstanding: 1
-        );
-        _ = fakeGameApiClient
-            .CheckUserBalanceAsync(
-                apiUrl: Arg.Is(query.ApiUrl),
-                vendorId: Arg.Is(query.VendorId),
-                vendorMemberId: Arg.Is(vendorMemberId),
-                walletType: Arg.Is(GameWalletType.Sportsbook))
-            .Returns(result);
+		var result = new GetBalanceResult
+		(
+			IsPlayerExist: true,
+			Balance: 99,
+			Outstanding: 1
+		);
+		_ = fakeGameApiClient
+			.CheckUserBalanceAsync(
+				apiUrl: Arg.Is(query.ApiUrl),
+				vendorId: Arg.Is(query.VendorId),
+				vendorMemberId: Arg.Is(vendorMemberId),
+				walletType: Arg.Is(GameWalletType.Sportsbook))
+			.Returns(result);
 
-        var sut = new PlayerBalanceGetService(
-            fakeGameApiClient,
-            fakeGameVendorMember);
+		var sut = new PlayerBalanceGetService(
+			fakeGameApiClient,
+			fakeGameVendorMember);
 
-        var actual = await sut
-            .GetAsync(query)
-            .ConfigureAwait(false);
+		var actual = await sut.GetAsync(query);
 
-        Assert.IsNotNull(actual);
-        Assert.IsTrue(actual.IsPlayerExist);
-    }
+		Assert.NotNull(actual);
+		Assert.True(actual.IsPlayerExist);
+	}
 }
