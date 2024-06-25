@@ -12,7 +12,8 @@ service  GameInterfaceSabaService{
   // Sends a greeting
   rpc PlayerCreate (PlayerCreateRequest) returns (BaseReply);
   rpc PlayerBalance (PlayerBalanceRequest) returns (PlayerBalanceReply); 
-  rpc PlayerKick (PlayerKickRequest) returns (BaseReply);
+  rpc PlayerLogout  (PlayerLogoutRequest) returns (BaseReply);
+  rpc PlayerOnline (PlayerOnlineRequest) returns (PlayerOnlineReply);
   rpc FundIn (FundRequest) returns (FundReply);
   rpc FundOut (FundRequest) returns (FundReply);
   rpc FundStatus(FundStatusRequest) returns (FundStatusReply);
@@ -28,8 +29,8 @@ message FundRequest {
 	string api_url = 1;
 	string operator_id = 2;
 	string vendor_id = 3;
-	string vendor_member_id = 4;
-	string vendor_transId = 5;
+	string player_code = 4;
+	string order_id = 5;
 	int32 currency = 6;
 	phoenix.protobuf.DecimalValue amount = 7;
 }
@@ -38,21 +39,28 @@ message FundStatusRequest {
 	string api_url = 1;
 	string operator_id = 2;
 	string vendor_id = 3;
-	string vendor_transId = 4;
+	string order_id = 4;
 }
 
 message PlayerBalanceRequest {
 	string api_url = 1;
 	string operator_id = 2;
 	string vendor_id = 3;
-	string vendor_member_id = 4;
+	string player_code = 4;
 }
 
-message PlayerKickRequest {
+message PlayerLogoutRequest {
 	string api_url = 1;
 	string operator_id = 2;
 	string vendor_id = 3;
-	string vendor_member_id = 4;
+	string player_code = 4;
+}
+
+message PlayerOnlineRequest {
+	string api_url = 1;
+	string operator_id = 2;
+	string vendor_id = 3;
+	string player_code = 4;
 }
 
 message PlayerCreateRequest {
@@ -60,7 +68,7 @@ message PlayerCreateRequest {
 	string operator_id = 2;
 	string vendor_id = 3;
 	string brand_code = 4;
-	string vendor_member_id = 5;
+	string player_code = 5;
 	int32 odds_type = 6;
 	int32 currency = 7;
 }
@@ -84,7 +92,7 @@ message GameUrlRequest {
 	string api_url = 1;
 	string operator_id = 2;
 	string vendor_id = 3;
-	string vendor_member_id = 4;
+	string player_code = 4;
 	bool is_mobile = 5;
 }
 
@@ -107,10 +115,11 @@ message PlayerBalanceReply {
 message FundReply {
 	bool check = 1;
 	bool is_order_exist = 2;
-	string vendor_trans_id = 3;
-    string actual_vendor_trans_id = 4;
-	int64 trans_id = 5;
-    phoenix.protobuf.DecimalValue balance = 6; 
+	string order_id = 3;
+	string vendor_trans_id = 4;
+    string actual_vendor_trans_id = 5;
+	int64 trans_id = 6;
+    phoenix.protobuf.DecimalValue balance = 7; 
 }
 
 message FundStatusReply {
@@ -146,6 +155,10 @@ message GameHistoryByTimeframeReply {
 message GameUrlReply {
 	bool is_player_exist = 1;
 	string game_url = 2;
+}
+
+message PlayerOnlineReply {
+	bool online = 1;
 }
 
 message CheckingServiceReply{

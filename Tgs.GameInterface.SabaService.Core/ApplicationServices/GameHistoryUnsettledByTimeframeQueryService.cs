@@ -5,33 +5,33 @@ using Tgs.ServiceUtility;
 namespace Tgs.GameInterface.SabaService.Core.ApplicationServices;
 
 internal class GameHistoryUnsettledByTimeframeQueryService(
-    IGameApiClient client,
-    IGameHistoryCalculate calculate) : IQueryService<GameHistoryUnsettledByTimeframeQuery, GameHistoryDetail>
+	IGameApiClient client,
+	IGameHistoryCalculate calculate) : IQueryService<GameHistoryUnsettledByTimeframeQuery, GameHistoryDetail>
 {
-    public async IAsyncEnumerable<GameHistoryDetail> QueryAsync(
-        GameHistoryUnsettledByTimeframeQuery query,
-        [EnumeratorCancellation] CancellationToken cancellationToken = default)
-    {
-        var betDetails = await client
-            .GetBetDetailByTimeframeAsync(
-                apiUrl: query.ApiUrl,
-                vendorId: query.VendorId,
-                timeType: GameTimeType.Bet,
-                startTime: query.StartTime,
-                endTime: query.EndTime,
-                cancellationToken: cancellationToken)
-            .ToArrayAsync(cancellationToken: cancellationToken)
-            .ConfigureAwait(false)
-            ?? Enumerable.Empty<BetDetail>();
+	public async IAsyncEnumerable<GameHistoryDetail> QueryAsync(
+		GameHistoryUnsettledByTimeframeQuery query,
+		[EnumeratorCancellation] CancellationToken cancellationToken = default)
+	{
+		var betDetails = await client
+			.GetBetDetailByTimeframeAsync(
+				apiUrl: query.ApiUrl,
+				vendorId: query.VendorId,
+				timeType: GameTimeType.Bet,
+				startTime: query.StartTime,
+				endTime: query.EndTime,
+				cancellationToken: cancellationToken)
+			.ToArrayAsync(cancellationToken: cancellationToken)
+			.ConfigureAwait(false)
+			?? Enumerable.Empty<BetDetail>();
 
-        if (!betDetails.Any())
-        {
-            yield break;
-        }
+		if (!betDetails.Any())
+		{
+			yield break;
+		}
 
-        foreach (var betDetail in betDetails)
-        {
-            yield return calculate.Execute(query.OperatorId, betDetail);
-        }
-    }
+		foreach (var betDetail in betDetails)
+		{
+			yield return calculate.Execute(query.OperatorId, betDetail);
+		}
+	}
 }

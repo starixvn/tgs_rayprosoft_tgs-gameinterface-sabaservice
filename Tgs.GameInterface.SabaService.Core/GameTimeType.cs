@@ -2,6 +2,6 @@
 
 public enum GameTimeType
 {
-    Bet = 1,
-    Settle = 2
+	Bet = 1,
+	Settle = 2
 }

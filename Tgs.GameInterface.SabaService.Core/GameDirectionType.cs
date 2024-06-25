@@ -2,6 +2,6 @@
 
 public enum GameDirectionType
 {
-    Deposit = 1,
-    Withdraw = 0
+	Deposit = 1,
+	Withdraw = 0
 }
