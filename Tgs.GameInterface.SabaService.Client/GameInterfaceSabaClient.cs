@@ -46,7 +46,7 @@ internal class GameInterfaceSabaClient(GameInterfaceSabaService.GameInterfaceSab
 			OperatorId = operatorId,
 			VendorId = vendorId,
 			PlayerCode = playerCode,
-			OrderId = operatorId,
+			OrderId = orderId,
 			Currency = currency,
 			Amount = amount
 		};
