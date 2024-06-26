@@ -120,6 +120,7 @@ message FundReply {
     string actual_vendor_trans_id = 5;
 	int64 trans_id = 6;
     phoenix.protobuf.DecimalValue balance = 7; 
+	string resp = 8;
 }
 
 message FundStatusReply {

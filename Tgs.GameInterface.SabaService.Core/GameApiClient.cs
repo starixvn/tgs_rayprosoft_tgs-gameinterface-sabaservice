@@ -182,7 +182,8 @@ internal class GameApiClient(
 			AfterAmount: data["after_amount"]?.GetValue<decimal>() ?? 0.0m,
 			BonusBeforeAmount: data["bonus_before_amount"]?.GetValue<decimal>() ?? 0.0m,
 			BonusAfterAmount: data["bonus_after_amount"]?.GetValue<decimal>() ?? 0.0m,
-			SystemId: data["system_id"]!.GetValue<string>());
+			SystemId: data["system_id"]!.GetValue<string>(),
+			Resp: data.ToJsonString());
 	}
 
 	public async ValueTask<GetBetDetailResult> GetBetDetailAsync(Uri apiUrl, string vendorId, long versionKey, CancellationToken cancellationToken = default)

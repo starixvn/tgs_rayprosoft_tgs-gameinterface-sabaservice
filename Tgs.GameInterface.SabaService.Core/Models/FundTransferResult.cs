@@ -8,4 +8,5 @@ public record FundTransferResult(
 	decimal AfterAmount = 0,
 	decimal BonusBeforeAmount = 0,
 	decimal BonusAfterAmount = 0,
-	string SystemId = "");
+	string SystemId = "",
+	string Resp = "");

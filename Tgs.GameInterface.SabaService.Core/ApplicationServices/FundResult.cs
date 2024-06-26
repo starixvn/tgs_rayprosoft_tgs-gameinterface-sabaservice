@@ -7,4 +7,5 @@ public record FundResult(
 	long TransId,
 	bool Check,
 	bool IsOrderExist,
-	decimal Balance);
+	decimal Balance,
+	string Resp);

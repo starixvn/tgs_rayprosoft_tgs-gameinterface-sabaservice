@@ -20,7 +20,8 @@ internal class FundOutGetService(
 			walletType: GameWalletType.Sportsbook,
 			currency: query.Currency,
 			amount: query.Amount,
-			cancellationToken: cancellationToken).ConfigureAwait(false);
+			cancellationToken: cancellationToken)
+			.ConfigureAwait(false);
 
 		return new FundResult(
 			Check: result.Check,
@@ -29,6 +30,7 @@ internal class FundOutGetService(
 			VendorTransId: vendorTransId,
 			ActualVendorTransId: vendorTransId,
 			TransId: result.TransId,
-			Balance: result.AfterAmount);
+			Balance: result.AfterAmount,
+			Resp: result.Resp);
 	}
 }

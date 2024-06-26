@@ -54,7 +54,8 @@ public class GameInterfaceSabaGrpcService(
 			VendorTransId = result.VendorTransId,
 			ActualVendorTransId = result.ActualVendorTransId,
 			TransId = result.TransId,
-			Balance = result.Balance
+			Balance = result.Balance,
+			Resp = result.Resp
 		};
 	}
 
@@ -82,7 +83,8 @@ public class GameInterfaceSabaGrpcService(
 			VendorTransId = result.VendorTransId,
 			ActualVendorTransId = result.ActualVendorTransId,
 			TransId = result.TransId,
-			Balance = result.Balance
+			Balance = result.Balance,
+			Resp = result.Resp
 		};
 	}
 
