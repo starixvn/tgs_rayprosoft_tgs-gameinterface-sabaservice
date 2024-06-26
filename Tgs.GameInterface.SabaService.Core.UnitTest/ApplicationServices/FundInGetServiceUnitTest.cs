@@ -1,4 +1,5 @@
-﻿using NSubstitute;
+﻿using System.Text.Json.Nodes;
+using NSubstitute;
 using Tgs.GameInterface.SabaService.Core.ApplicationServices;
 using Tgs.GameInterface.SabaService.Core.Models;
 using Xunit;
@@ -35,11 +36,7 @@ public class FundInGetServiceUnitTest
 			Check: false,
 			IsOrderExist: true,
 			TransId: DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
-			AfterAmount: 0,
-			BeforeAmount: 1,
-			BonusAfterAmount: 0,
-			BonusBeforeAmount: 0,
-			SystemId: "ZF055PMWUUS19001");
+			Resp: "{\"trans_id\":3121,\"before_amount\":1.0,\"after_amount\":0.0,\"bonus_before_amount\":0,\"bonus_after_amount\":0.0,\"system_id\":\"ZF055PMWUUS19001\",\"status\":0}");
 		_ = fakeGameApiClient
 			.FundTransferAsync(
 				apiUrl: Arg.Is(query.ApiUrl),
@@ -63,7 +60,5 @@ public class FundInGetServiceUnitTest
 		Assert.False(actual.Check);
 		Assert.Equal(query.OrderId, actual.OrderId);
 		Assert.Equal(vendorTransId, actual.VendorTransId);
-		Assert.Equal(vendorTransId, actual.ActualVendorTransId);
-		Assert.Equal(result.AfterAmount, actual.Balance);
 	}
 }

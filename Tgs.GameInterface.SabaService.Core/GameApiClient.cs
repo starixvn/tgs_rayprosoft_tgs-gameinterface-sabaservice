@@ -168,7 +168,9 @@ internal class GameApiClient(
 		{
 			return new FundTransferResult(
 				 Check: true,
-				 IsOrderExist: false);
+				 IsOrderExist: false,
+				 TransId: 0,
+				 Resp: jsonNode.ToJsonString());
 		}
 
 		var data = jsonNode["Data"]
@@ -178,11 +180,7 @@ internal class GameApiClient(
 			Check: false,
 			IsOrderExist: data["status"]!.GetValue<int>() == 0,
 			TransId: data["trans_id"]!.GetValue<long>(),
-			BeforeAmount: data["before_amount"]?.GetValue<decimal>() ?? 0.0m,
-			AfterAmount: data["after_amount"]?.GetValue<decimal>() ?? 0.0m,
-			BonusBeforeAmount: data["bonus_before_amount"]?.GetValue<decimal>() ?? 0.0m,
-			BonusAfterAmount: data["bonus_after_amount"]?.GetValue<decimal>() ?? 0.0m,
-			SystemId: data["system_id"]!.GetValue<string>());
+			Resp: data.ToJsonString());
 	}
 
 	public async ValueTask<GetBetDetailResult> GetBetDetailAsync(Uri apiUrl, string vendorId, long versionKey, CancellationToken cancellationToken = default)

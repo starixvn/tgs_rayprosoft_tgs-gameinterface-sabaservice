@@ -117,9 +117,8 @@ message FundReply {
 	bool is_order_exist = 2;
 	string order_id = 3;
 	string vendor_trans_id = 4;
-    string actual_vendor_trans_id = 5;
-	int64 trans_id = 6;
-    phoenix.protobuf.DecimalValue balance = 7; 
+	int64 trans_id = 5;
+	string resp = 6;
 }
 
 message FundStatusReply {

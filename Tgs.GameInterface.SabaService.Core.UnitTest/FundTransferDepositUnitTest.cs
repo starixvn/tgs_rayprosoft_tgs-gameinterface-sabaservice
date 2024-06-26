@@ -42,7 +42,6 @@ public class FundTransferDepositUnitTest
 
 		Assert.NotNull(actual);
 		Assert.True(actual.IsOrderExist);
-		Assert.Equal(1m, actual.AfterAmount);
 	}
 
 	[Fact]
@@ -80,10 +79,6 @@ public class FundTransferDepositUnitTest
 
 		Assert.NotNull(actual);
 		Assert.True(actual.IsOrderExist);
-		Assert.Equal(987.5m, actual.BeforeAmount);
-		Assert.Equal(0.5m, actual.AfterAmount);
-		Assert.Equal(0.0m, actual.BonusBeforeAmount);
-		Assert.Equal(0.0m, actual.BonusAfterAmount);
 	}
 
 	[Fact]

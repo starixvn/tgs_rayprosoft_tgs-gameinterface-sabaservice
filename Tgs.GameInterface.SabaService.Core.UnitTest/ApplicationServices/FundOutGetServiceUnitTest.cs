@@ -34,11 +34,7 @@ public class FundOutGetServiceUnitTest
 			Check: false,
 			IsOrderExist: true,
 			TransId: DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
-			AfterAmount: 1,
-			BeforeAmount: 0,
-			BonusAfterAmount: 0,
-			BonusBeforeAmount: 0,
-			SystemId: "ZF055PMWUUS19001");
+			Resp: "{\"trans_id\":3120,\"before_amount\":0.0,\"after_amount\":1.0,\"bonus_before_amount\":0,\"bonus_after_amount\":0.0,\"system_id\":\"ZF055PMWUUS19001\",\"status\":0}");
 		_ = fakeGameApiClient
 			.FundTransferAsync(
 				apiUrl: Arg.Is(query.ApiUrl),
@@ -62,7 +58,5 @@ public class FundOutGetServiceUnitTest
 		Assert.False(actual.Check);
 		Assert.Equal(query.OrderId, actual.OrderId);
 		Assert.Equal(vendorTransId, actual.VendorTransId);
-		Assert.Equal(vendorTransId, actual.ActualVendorTransId);
-		Assert.Equal(result.AfterAmount, actual.Balance);
 	}
 }
