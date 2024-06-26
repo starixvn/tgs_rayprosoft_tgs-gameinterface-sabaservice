@@ -28,9 +28,7 @@ internal class FundInGetService(
 			IsOrderExist: result.IsOrderExist,
 			OrderId: query.OrderId,
 			VendorTransId: vendorTransId,
-			ActualVendorTransId: vendorTransId,
 			TransId: result.TransId,
-			Balance: result.AfterAmount,
 			Resp: result.Resp);
 	}
 }
