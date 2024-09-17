@@ -13,6 +13,8 @@ public static class ServiceCollectionExtensions
 			ServiceLifetime.Transient)
 		.AddHttpClient<IGameApiClient, GameApiClient>()
 		.Services
+		.AddHttpClient<IStatementReportApiClient, StatementReportApiClient>()
+		.Services
 		.AddSingleton<IGameVendorMember, GameVendorMember>()
 		.AddSingleton<IGameHistoryCalculate, GameHistoryCalculate>();
 }
