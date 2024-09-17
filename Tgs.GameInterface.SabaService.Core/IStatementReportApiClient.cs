@@ -5,5 +5,5 @@ namespace Tgs.GameInterface.SabaService.Core;
 
 public interface IStatementReportApiClient
 {
-	Task<StatementTokenResponse> GetReportTokenAsync(Uri apiUrl, StatementTokenRequest request, CancellationToken cancellationToken = default);
+	Task<TResult> PostAsync<TResult>(StatementReportRequest request);
 }

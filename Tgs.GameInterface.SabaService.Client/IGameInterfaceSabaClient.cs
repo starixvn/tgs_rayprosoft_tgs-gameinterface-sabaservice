@@ -20,6 +20,8 @@ public interface IGameInterfaceSabaClient
 
 	ValueTask<GameUrlReply> GameUrlAsync(Uri apiUrl, string operatorId, string vendorId, string playerCode, bool isMobile, CancellationToken cancellationToken = default);
 
+	ValueTask<string> StatementReportUrlAsync(Uri apiUrl, long transactionId, long baseCurrency = 0, string language = null, string playerUsername = null, CancellationToken cancellationToken = default);
+
 	ValueTask<PlayerBalanceReply> PlayerBalanceAsync(Uri apiUrl, string operatorId, string vendorId, string playerCode, CancellationToken cancellationToken = default);
 
 	ValueTask PlayerCreateAsync(Uri apiUrl, string operatorId, string vendorId, string brandCode, string playerCode, int oddsType, int currency, CancellationToken cancellationToken = default);

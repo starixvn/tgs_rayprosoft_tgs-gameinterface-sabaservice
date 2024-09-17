@@ -12,6 +12,7 @@
     <PackageReference Include="System.Linq.Async" Version="6.0.1" />
     <PackageReference Include="TGS.ServiceUtility" Version="0.2.0" />
 	  <PackageReference Include="Sentry.AspNetCore" Version="4.10.2" />
+	  <PackageReference Include="Tgs.GameCommand.Client" Version="1.0.0" />
   </ItemGroup>
 
 </Project>

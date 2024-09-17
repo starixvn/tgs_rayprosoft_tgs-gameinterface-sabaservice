@@ -72,6 +72,12 @@ builder.Services
 		options.ReleaseNamespace = releaseNamespace;
 	})
 	.Services
+	.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"))
+	.AddGameCommandClient((options, sp) =>
+	{
+		var configuration = sp.GetRequiredService<IConfiguration>();
+		options.BaseUrl = new Uri(configuration.GetConnectionString("GameCommandClientBaseUrl")!);
+	})
 	.AddGameInterfaceCore();
 
 builder.Services

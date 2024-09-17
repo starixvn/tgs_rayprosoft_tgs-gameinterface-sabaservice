@@ -2,13 +2,9 @@
 
 public record StatementReportQuery()
 {
-	public required Uri ApiUrl { get; set; } = default!;
+	public required string PlayerCode { get; set; }
 
 	public required long TransactionId { get; set; }
-
-	public required string Username { get; set; } = default!;
-
-	public required string Password { get; set; } = default!;
 
 	public long? BaseCurrency { get; internal set; }
 
