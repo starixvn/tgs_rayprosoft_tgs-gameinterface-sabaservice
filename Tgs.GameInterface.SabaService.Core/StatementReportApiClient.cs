@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Tgs.GameInterface.SabaService.Core.Models;
 
 namespace Tgs.GameInterface.SabaService.Core;
@@ -8,12 +7,8 @@ internal class StatementReportApiClient(ISentryClient sentryClient, HttpClient c
 {
 	public async Task<TResult> PostAsync<TResult>(StatementReportRequest request)
 	{
-		var sw = Stopwatch.StartNew();
-
 		client.BaseAddress = request.ApiUrl;
 		var response = await client.PostAsync(request.Path, request.Content, request.CancellationToken).ConfigureAwait(false);
-
-		sw.Stop();
 
 		_ = response.EnsureSuccessStatusCode();
 
