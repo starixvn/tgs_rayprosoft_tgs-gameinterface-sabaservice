@@ -233,21 +233,19 @@ internal class GameInterfaceSabaClient(GameInterfaceSabaService.GameInterfaceSab
 		return reply.Online;
 	}
 
-	public async ValueTask<string> StatementReportUrlAsync(Uri apiUrl, long transactionId, long baseCurrency = 0, string language = null, string playerUsername = null, CancellationToken cancellationToken = default)
+	public async ValueTask<StatementReportTokenReply> StatementReportTokenAsync(Uri apiUrl, string username, string password, CancellationToken cancellationToken = default)
 	{
-		var request = new StatementReportUrlRequest()
+		var request = new StatementReportTokenRequest()
 		{
 			ApiUrl = apiUrl.ToString(),
-			TransactionId = transactionId,
-			BaseCurrency = baseCurrency,
-			Language = language,
+			Username = username,
+			Password = password,
 		};
 
-		var reply = await client.StatementReportUrlAsync(
+		var reply = await client.StatementReportTokenAsync(
 			request: request,
-			cancellationToken: cancellationToken)
-			.ConfigureAwait(false);
+			cancellationToken: cancellationToken);
 
-		return reply.Url;
+		return reply;
 	}
 }

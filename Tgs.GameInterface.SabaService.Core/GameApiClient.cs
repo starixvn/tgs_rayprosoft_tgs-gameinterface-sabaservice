@@ -1,8 +1,10 @@
 ﻿using System.Diagnostics;
+using System.Net.Http.Json;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Microsoft.Extensions.Logging;
+using Tgs.GameInterface.SabaService.Core.ApplicationServices;
 using Tgs.GameInterface.SabaService.Core.Exceptions;
 using Tgs.GameInterface.SabaService.Core.Models;
 
@@ -443,6 +445,59 @@ internal class GameApiClient(
 			?? throw new Exception("取得點數失敗");
 
 		return data["is_online"]!.GetValue<bool>();
+	}
+
+	public async ValueTask<StatementTokenResult> GetStatementReportToken(Uri apiUrl, string username, string password, CancellationToken cancellationToken = default)
+	{
+		var url = new Uri(apiUrl, "/api/auth/");
+
+		var content = JsonContent.Create(new
+		{
+			username,
+			password,
+		});
+
+		var token = await PostAsync<StatementTokenResult>(
+		   apiUrl: url,
+		   content: content,
+		   logPrefix: nameof(GetStatementReportToken),
+		   cancellationToken: cancellationToken).ConfigureAwait(false);
+
+		return token;
+	}
+
+	private async Task<TResult> PostAsync<TResult>(Uri apiUrl, JsonContent content, string logPrefix, CancellationToken cancellationToken = default)
+	{
+		var sw = Stopwatch.StartNew();
+
+		var response = await client.PostAsync(apiUrl, content, cancellationToken).ConfigureAwait(false);
+
+		_ = response.EnsureSuccessStatusCode();
+
+		sw.Stop();
+
+		var data = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+
+		var requestContent = await content.ReadAsStringAsync().ConfigureAwait(false);
+
+		var apiLogEvent = new
+		{
+			Path = response.RequestMessage?.RequestUri?.AbsoluteUri.NoLongerThan(512) ?? string.Empty,
+			Method = response.RequestMessage?.Method.ToString().NoLongerThan(8) ?? string.Empty,
+			Prefix = logPrefix,
+			ServerName = Environment.MachineName.NoLongerThan(128),
+			RequestHeaders = response.RequestMessage?.Headers + response.RequestMessage?.Content?.Headers?.ToString(),
+			RequestContent = (await content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false)).NoLongerThan(4096),
+			ResponseHeaders = response.Headers.ToString(),
+			ResponseContent = data.NoLongerThan(4096),
+			ResponseCode = (short)response.StatusCode,
+			ExecutionTimeMs = (int)sw.ElapsedMilliseconds,
+			RecordedOn = DateTimeOffset.UtcNow
+		};
+
+		logger.LogInformation("{apiLogEvent}", JsonSerializer.Serialize(apiLogEvent));
+
+		return JsonSerializer.Deserialize<TResult>(data)!;
 	}
 
 	private async ValueTask<JsonNode> PostAsync(Uri apiUrl, IEnumerable<KeyValuePair<string, string>> parameters, string logPrefix, CancellationToken cancellationToken = default)

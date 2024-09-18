@@ -1,8 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Tgs.GameInterface.SabaService.Core.Models;
+namespace Tgs.GameInterface.SabaService.Core.ApplicationServices;
 
-public record StatementTokenResponse
+public record StatementTokenResult
 {
 	[JsonPropertyName("access_token")]
 	public required string AccessToken { get; set; }

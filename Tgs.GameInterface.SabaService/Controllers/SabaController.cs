@@ -8,10 +8,10 @@ namespace Tgs.GameInterface.SabaService.Controllers;
 [ApiController]
 public class SabaController : ControllerBase
 {
-	[HttpPost("report/statementurl", Name = "StatementUrl")]
-	public ValueTask<StatementReportResult> StatementReportAsync(
-	[FromServices] IGetService<StatementReportQuery, StatementReportResult> service,
-	StatementReportQuery source)
+	[HttpPost("report/statementtoken", Name = "StatementToken")]
+	public ValueTask<StatementTokenResult> StatementReportTokenAsync(
+	[FromServices] IGetService<StatementReportTokenQuery, StatementTokenResult> service,
+	StatementReportTokenQuery source)
 	=> service.GetAsync(
 		query: source,
 		cancellationToken: HttpContext.RequestAborted);

@@ -1,4 +1,5 @@
-﻿using Tgs.GameInterface.SabaService.Core.Models;
+﻿using Tgs.GameInterface.SabaService.Core.ApplicationServices;
+using Tgs.GameInterface.SabaService.Core.Models;
 
 namespace Tgs.GameInterface.SabaService.Core;
 
@@ -21,4 +22,6 @@ public interface IGameApiClient
 	IAsyncEnumerable<BetDetail> GetBetDetailByTimeframeAsync(Uri apiUrl, string vendorId, GameTimeType timeType, DateTime startTime, DateTime endTime, CancellationToken cancellationToken = default);
 
 	ValueTask<GetGameUrlResult> GetSabaUrlAsync(Uri apiUrl, string vendorId, string vendorMemberId, GamePlatformType platformType, CancellationToken cancellationToken = default);
+
+	ValueTask<StatementTokenResult> GetStatementReportToken(Uri apiUrl, string username, string password, CancellationToken cancellationToken = default);
 }

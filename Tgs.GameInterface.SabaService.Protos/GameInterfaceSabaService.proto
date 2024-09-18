@@ -21,7 +21,7 @@ service  GameInterfaceSabaService{
   rpc GameHistorySettled ( GameHistoryByTimeframeRequest) returns ( GameHistoryByTimeframeReply);
   rpc GameHistoryUnsettled ( GameHistoryByTimeframeRequest) returns ( GameHistoryByTimeframeReply);
   rpc GameUrl (GameUrlRequest) returns (GameUrlReply);
-  rpc StatementReportUrl (StatementReportUrlRequest) returns (StatementReportUrlReply);
+  rpc StatementReportToken (StatementReportTokenRequest) returns (StatementReportTokenReply);
   rpc CheckingService(CheckingServiceRequest) returns (CheckingServiceReply);
 }
 
@@ -97,14 +97,10 @@ message GameUrlRequest {
 	bool is_mobile = 5;
 }
 
-message StatementReportUrlRequest {
+message StatementReportTokenRequest {
 	string api_url = 1;
-	int64 transaction_id = 2;
 	string username = 3;
 	string password = 4;
-	int64 base_currency = 5;
-	string language = 6;
-	string playerusername = 7;
 }
 
 message CheckingServiceRequest{
@@ -167,8 +163,10 @@ message GameUrlReply {
 	string game_url = 2;
 }
 
-message StatementReportUrlReply {
-	string url = 1;
+message StatementReportTokenReply {
+	string access_token = 1;
+	string token_type = 2;
+	int32 expries_in = 3;
 }
 
 message PlayerOnlineReply {
