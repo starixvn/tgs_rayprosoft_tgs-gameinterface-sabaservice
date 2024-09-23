@@ -2,7 +2,6 @@
 
 import "phoenix/protobuf/decimal.proto";
 import "google/protobuf/timestamp.proto";
-import "google/protobuf/wrappers.proto";
 
 option csharp_namespace = "Tgs.GameInterface.SabaService.Protos";
 
@@ -166,7 +165,7 @@ message GameUrlReply {
 
 message StatementReportTokenReply {
 	string access_token = 1;
-	google.protobuf.StringValue token_type = 2;
+	string token_type = 2;
 	int32 expries_in = 3;
 }
 
