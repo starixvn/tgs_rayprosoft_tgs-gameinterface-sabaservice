@@ -8,6 +8,14 @@ namespace Tgs.GameInterface.SabaService.Controllers;
 [ApiController]
 public class SabaController : ControllerBase
 {
+	[HttpPost("report/statementtoken", Name = "StatementToken")]
+	public ValueTask<StatementTokenResult> StatementReportTokenAsync(
+	[FromServices] IGetService<StatementReportTokenQuery, StatementTokenResult> service,
+	StatementReportTokenQuery source)
+	=> service.GetAsync(
+		query: source,
+		cancellationToken: HttpContext.RequestAborted);
+
 	/// <summary>
 	/// Funds the in asynchronous.
 	/// </summary>

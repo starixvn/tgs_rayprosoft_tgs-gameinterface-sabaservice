@@ -232,4 +232,20 @@ internal class GameInterfaceSabaClient(GameInterfaceSabaService.GameInterfaceSab
 
 		return reply.Online;
 	}
+
+	public async ValueTask<StatementReportTokenReply> StatementReportTokenAsync(Uri apiUrl, string username, string password, CancellationToken cancellationToken = default)
+	{
+		var request = new StatementReportTokenRequest()
+		{
+			ApiUrl = apiUrl.ToString(),
+			Username = username,
+			Password = password,
+		};
+
+		var reply = await client.StatementReportTokenAsync(
+			request: request,
+			cancellationToken: cancellationToken);
+
+		return reply;
+	}
 }
