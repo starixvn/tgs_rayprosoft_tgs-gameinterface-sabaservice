@@ -15,6 +15,7 @@ public class GameInterfaceSabaGrpcService(
 	IQueryService<GameHistorySettledByTimeframeQuery, GameHistoryDetail> gameHistorySettledByTimeframeService,
 	IQueryService<GameHistoryUnsettledByTimeframeQuery, GameHistoryDetail> gameHistoryUnsettledByTimeframeService,
 	IGetService<GameUrlQuery, GameUrlResult> gameUrlService,
+	IGetService<StatementReportTokenQuery, StatementTokenResult> stateTokenService,
 	IGetService<PlayerBalanceQuery, PlayerBalanceResult> playerBalanceService,
 	IGetService<PlayerOnlineQuery, bool> playerOnlineService,
 	ICommandService<PlayerCreateCommand> playerCreateService,
@@ -235,6 +236,26 @@ public class GameInterfaceSabaGrpcService(
 		}
 
 		return reply;
+	}
+
+	public override async Task<StatementReportTokenReply> StatementReportToken(StatementReportTokenRequest request, ServerCallContext context)
+	{
+		var query = new StatementReportTokenQuery(
+			ApiUrl: new Uri(request.ApiUrl),
+			Username: request.Username,
+			Password: request.Password);
+
+		var result = await stateTokenService.GetAsync(
+			query: query,
+			cancellationToken: context.CancellationToken)
+			.ConfigureAwait(false);
+
+		return new StatementReportTokenReply
+		{
+			AccessToken = result.AccessToken,
+			ExpriesIn = result.ExpiresIn,
+			TokenType = result.TokenType
+		};
 	}
 
 	public override async Task<GameUrlReply> GameUrl(GameUrlRequest request, ServerCallContext context)
