@@ -478,8 +478,6 @@ internal class GameApiClient(
 
 		var data = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
 
-		var requestContent = await content.ReadAsStringAsync().ConfigureAwait(false);
-
 		var apiLogEvent = new
 		{
 			Path = response.RequestMessage?.RequestUri?.AbsoluteUri.NoLongerThan(512) ?? string.Empty,

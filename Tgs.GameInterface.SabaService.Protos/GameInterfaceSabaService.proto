@@ -99,8 +99,8 @@ message GameUrlRequest {
 
 message StatementReportTokenRequest {
 	string api_url = 1;
-	string username = 3;
-	string password = 4;
+	string username = 2;
+	string password = 3;
 }
 
 message CheckingServiceRequest{
