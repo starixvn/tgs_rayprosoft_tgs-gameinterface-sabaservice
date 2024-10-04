@@ -6,11 +6,13 @@ using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Tgs.GameInterface.SabaService;
 using Tgs.GameInterface.SabaService.Core;
+using Tgs.GameInterface.SabaService.Core.Models;
 using Tgs.GameInterface.SabaService.GrpcServices;
 
 var filterInstrumentations = new[] { "html", "ico", "png", "jpg" };
 
 var builder = WebApplication.CreateBuilder(args);
+var settings = builder.Configuration.Get<Settings>();
 
 builder.WebHost.UseSentry();
 
@@ -72,7 +74,7 @@ builder.Services
 		options.ReleaseNamespace = releaseNamespace;
 	})
 	.Services
-	.AddGameInterfaceCore();
+	.AddGameInterfaceCore(settings);
 
 builder.Services
 	.AddOpenTelemetry()
