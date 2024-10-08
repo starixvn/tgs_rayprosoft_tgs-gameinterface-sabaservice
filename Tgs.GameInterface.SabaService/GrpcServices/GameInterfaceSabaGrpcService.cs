@@ -46,7 +46,6 @@ public class GameInterfaceSabaGrpcService(
 	{
 		var query = new GameUrlQuery(
 			ApiUrl: new Uri(request.ApiUrl),
-			OperatorId: request.OperatorId,
 			VendorId: request.VendorId,
 			PlayerCode: request.PlayerCode,
 			IsMobile: request.IsMobile,

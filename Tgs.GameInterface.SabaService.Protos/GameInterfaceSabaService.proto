@@ -29,11 +29,10 @@ message PlayerCreateRequest {
 
 message GameUrlRequest {
 	string api_url = 1;
-	string operator_id = 2;
-	string vendor_id = 3;
-	string player_code = 4;
-	bool is_mobile = 5;
-	string brand_code = 6;
+	string vendor_id = 2;
+	string player_code = 3;
+	bool is_mobile = 4;
+	string brand_code = 5;
 }
 
 message StatementReportTokenRequest {

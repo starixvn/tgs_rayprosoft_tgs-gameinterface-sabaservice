@@ -19,12 +19,11 @@ internal class GameInterfaceSabaClient(GameInterfaceSabaService.GameInterfaceSab
 		return reply.MachineName;
 	}
 
-	public async ValueTask<GameUrlReply> GameUrlAsync(Uri apiUrl, string operatorId, string vendorId, string playerCode, bool isMobile, string brandCode, CancellationToken cancellationToken = default)
+	public async ValueTask<GameUrlReply> GameUrlAsync(Uri apiUrl, string vendorId, string playerCode, bool isMobile, string brandCode, CancellationToken cancellationToken = default)
 	{
 		var request = new GameUrlRequest()
 		{
 			ApiUrl = apiUrl.ToString(),
-			OperatorId = operatorId,
 			VendorId = vendorId,
 			PlayerCode = playerCode,
 			IsMobile = isMobile,

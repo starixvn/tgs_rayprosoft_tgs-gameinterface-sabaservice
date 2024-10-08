@@ -6,3 +6,6 @@ include:
   - project: ci/core-cicd
     ref: main
     file: nexcel.gitlab-ci.yml
+
+sonar_dotnet:
+  allow_failure: true

@@ -14,7 +14,6 @@ public class GameUrlGetServiceUnitTest
 
 		var query = new GameUrlQuery(
 			ApiUrl: new Uri("http://h0i2tsa.bw6688.com/"),
-			OperatorId: "tg",
 			VendorId: "um5vspnzkx",
 			PlayerCode: "4ucmqplxb029",
 			IsMobile: false,
