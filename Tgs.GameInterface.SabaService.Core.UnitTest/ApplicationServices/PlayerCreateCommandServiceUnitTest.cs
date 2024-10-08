@@ -40,8 +40,6 @@ public class PlayerCreateCommandServiceUnitTest
 			   operatorId: Arg.Is(command.OperatorId),
 			   vendorId: Arg.Is(command.VendorId),
 			   vendorMemberId: vendorMemberId,
-			   firstName: Arg.Is(command.BrandCode),
-			   lastName: Arg.Is(command.PlayerCode),
 			   oddsType: Arg.Is(command.OddsType),
 			   currency: Arg.Is(command.Currency));
 	}

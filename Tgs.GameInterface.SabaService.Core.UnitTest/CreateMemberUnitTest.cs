@@ -14,8 +14,6 @@ public class CreateMemberUnitTest
 		var vendorId = "um5vspnzkx";
 		var vendorMemberId = "tg_4ucmqplxb029_test";
 		string operatorId = "tg";
-		string firstName = "GPI";
-		string lastName = "4ucmqplxb029";
 		int oddsType = 2;
 		int currency = 13;
 		decimal maxTransfer = 9999999999;
@@ -37,8 +35,6 @@ public class CreateMemberUnitTest
 			vendorId: vendorId,
 			vendorMemberId: vendorMemberId,
 			operatorId: operatorId,
-			firstName: firstName,
-			lastName: lastName,
 			oddsType: oddsType,
 			currency: currency,
 			maxTransfer: maxTransfer,
@@ -52,8 +48,6 @@ public class CreateMemberUnitTest
 		var vendorId = "um5vspnzkx";
 		var vendorMemberId = "tg_4ucmqplxb029_test";
 		string operatorId = "tg";
-		string firstName = "GPI";
-		string lastName = "4ucmqplxb029";
 		int oddsType = 2;
 		int currency = 20;
 		decimal maxTransfer = 9999999999;
@@ -75,8 +69,6 @@ public class CreateMemberUnitTest
 			vendorId: vendorId,
 			vendorMemberId: vendorMemberId,
 			operatorId: operatorId,
-			firstName: firstName,
-			lastName: lastName,
 			oddsType: oddsType,
 			currency: currency,
 			maxTransfer: maxTransfer,
@@ -90,8 +82,6 @@ public class CreateMemberUnitTest
 		var vendorId = "um5vspnzkx";
 		var vendorMemberId = "tg_4ucmqplxb029_test";
 		string operatorId = "tg";
-		string firstName = "GPI";
-		string lastName = "4ucmqplxb029";
 		int oddsType = 2;
 		int currency = 13;
 		decimal maxTransfer = 9999999999;
@@ -114,8 +104,6 @@ public class CreateMemberUnitTest
 					vendorId: vendorId,
 					vendorMemberId: vendorMemberId,
 					operatorId: operatorId,
-					firstName: firstName,
-					lastName: lastName,
 					oddsType: oddsType,
 					currency: currency,
 					maxTransfer: maxTransfer,

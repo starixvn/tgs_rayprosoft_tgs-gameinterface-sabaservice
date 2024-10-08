@@ -8,15 +8,13 @@ internal class PlayerCreateCommandService(
 {
 	public ValueTask ExecuteAsync(PlayerCreateCommand command, CancellationToken cancellationToken = default)
 	{
-		var vendorMemberId = vendorMember.ConvertToGameProviderMember(command.OperatorId, command.PlayerCode);
+		var vendorMemberId = vendorMember.ConvertToGameProviderMember(command.BrandCode, command.PlayerCode);
 
 		return client.CreateMemberAsync(
 			apiUrl: command.ApiUrl,
 			operatorId: command.OperatorId,
 			vendorId: command.VendorId,
 			vendorMemberId: vendorMemberId,
-			firstName: command.BrandCode,
-			lastName: command.PlayerCode,
 			oddsType: command.OddsType,
 			currency: command.Currency,
 			cancellationToken: cancellationToken);

@@ -11,59 +11,12 @@ package GameInterfaceSabaService;
 service  GameInterfaceSabaService{
   // Sends a greeting
   rpc PlayerCreate (PlayerCreateRequest) returns (BaseReply);
-  rpc PlayerBalance (PlayerBalanceRequest) returns (PlayerBalanceReply); 
-  rpc PlayerLogout  (PlayerLogoutRequest) returns (BaseReply);
-  rpc PlayerOnline (PlayerOnlineRequest) returns (PlayerOnlineReply);
-  rpc FundIn (FundRequest) returns (FundReply);
-  rpc FundOut (FundRequest) returns (FundReply);
-  rpc FundStatus(FundStatusRequest) returns (FundStatusReply);
-  rpc GameHistory ( GameHistoryRequest) returns ( GameHistoryReply);
-  rpc GameHistorySettled ( GameHistoryByTimeframeRequest) returns ( GameHistoryByTimeframeReply);
-  rpc GameHistoryUnsettled ( GameHistoryByTimeframeRequest) returns ( GameHistoryByTimeframeReply);
   rpc GameUrl (GameUrlRequest) returns (GameUrlReply);
   rpc StatementReportToken (StatementReportTokenRequest) returns (StatementReportTokenReply);
   rpc CheckingService(CheckingServiceRequest) returns (CheckingServiceReply);
 }
 
 // The request message containing the user's name.
-message FundRequest {
-	string api_url = 1;
-	string operator_id = 2;
-	string vendor_id = 3;
-	string player_code = 4;
-	string order_id = 5;
-	int32 currency = 6;
-	phoenix.protobuf.DecimalValue amount = 7;
-}
-
-message FundStatusRequest {
-	string api_url = 1;
-	string operator_id = 2;
-	string vendor_id = 3;
-	string order_id = 4;
-}
-
-message PlayerBalanceRequest {
-	string api_url = 1;
-	string operator_id = 2;
-	string vendor_id = 3;
-	string player_code = 4;
-}
-
-message PlayerLogoutRequest {
-	string api_url = 1;
-	string operator_id = 2;
-	string vendor_id = 3;
-	string player_code = 4;
-}
-
-message PlayerOnlineRequest {
-	string api_url = 1;
-	string operator_id = 2;
-	string vendor_id = 3;
-	string player_code = 4;
-}
-
 message PlayerCreateRequest {
 	string api_url = 1;
 	string operator_id = 2;
@@ -74,27 +27,13 @@ message PlayerCreateRequest {
 	int32 currency = 7;
 }
 
-message GameHistoryByTimeframeRequest {
-	string api_url = 1;
-	string operator_id = 2;
-	string vendor_id = 3;
-	google.protobuf.Timestamp start_time = 4; 
-	google.protobuf.Timestamp end_time = 5;
-}
-
-message GameHistoryRequest {
-	string api_url = 1;
-	string operator_id = 2;
-	string vendor_id = 3;
-	int64 version_key = 4;
-}
-
 message GameUrlRequest {
 	string api_url = 1;
 	string operator_id = 2;
 	string vendor_id = 3;
 	string player_code = 4;
 	bool is_mobile = 5;
+	string brand_code = 6;
 }
 
 message StatementReportTokenRequest {
@@ -112,52 +51,6 @@ message BaseReply{
 	bool status = 1;
 }
 
-message PlayerBalanceReply {
-	bool is_player_exist = 1;
-	phoenix.protobuf.DecimalValue balance = 2;
-	phoenix.protobuf.DecimalValue free_balance = 3;
-	phoenix.protobuf.DecimalValue outstanding_balance = 4;
-}
-
-message FundReply {
-	bool check = 1;
-	bool is_order_exist = 2;
-	string order_id = 3;
-	string vendor_trans_id = 4;
-	int64 trans_id = 5;
-	string resp = 6;
-}
-
-message FundStatusReply {
-	bool retry = 1;
-	bool is_order_exist = 2;
-}
-
-message GameHistoryReply {
-	int64  last_version_key = 1;
-	repeated GameHistory items = 2;
-}
-
-message GameHistory {
-    string player_code = 1;
-    string external_round_id = 2;
-	bool is_cashout = 3;
-    bool is_closed = 4;
-    GameHistoryStatus status = 5;
-	google.protobuf.Timestamp external_created_on = 6;
-	google.protobuf.Timestamp external_closed_on = 7;
-	phoenix.protobuf.DecimalValue bet = 8;
-	phoenix.protobuf.DecimalValue valid_bet = 9;
-	phoenix.protobuf.DecimalValue player_win_loss = 10;
-	phoenix.protobuf.DecimalValue turnover = 11;
-	phoenix.protobuf.DecimalValue settle = 12;
-    string additional_data = 13;
-}
-
-message GameHistoryByTimeframeReply {
-	repeated GameHistory items = 1;
-}
-
 message GameUrlReply {
 	bool is_player_exist = 1;
 	string game_url = 2;
@@ -169,24 +62,6 @@ message StatementReportTokenReply {
 	int32 expries_in = 3;
 }
 
-message PlayerOnlineReply {
-	bool online = 1;
-}
-
 message CheckingServiceReply{
     string machine_name = 1;
-}
-
-enum GameHistoryStatus{
-	GAME_HISTORY_STATUS_UNKNOWN = 0;
-	GAME_HISTORY_STATUS_WAITING  = 1;
-	GAME_HISTORY_STATUS_RUNNING = 2;
-	GAME_HISTORY_STATUS_VOID = 3;
-	GAME_HISTORY_STATUS_REFUND = 4;
-	GAME_HISTORY_STATUS_REJECT = 5;
-	GAME_HISTORY_STATUS_LOSE = 6;
-	GAME_HISTORY_STATUS_WON = 7;
-	GAME_HISTORY_STATUS_DRAW = 8;
-	GAME_HISTORY_STATUS_HALF_WON = 9;
-	GAME_HISTORY_STATUS_HALF_LOSE = 10;
 }

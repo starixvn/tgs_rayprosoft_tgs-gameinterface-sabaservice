@@ -30,6 +30,5 @@ public static class ServiceCollectionExtensions
 			return new HttpClientHandler();
 		})
 		.Services
-		.AddSingleton<IGameVendorMember, GameVendorMember>()
-		.AddSingleton<IGameHistoryCalculate, GameHistoryCalculate>();
+		.AddSingleton<IGameVendorMember, GameVendorMember>();
 }

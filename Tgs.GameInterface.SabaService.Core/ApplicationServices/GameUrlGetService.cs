@@ -8,7 +8,7 @@ internal class GameUrlGetService(
 {
 	public async ValueTask<GameUrlResult> GetAsync(GameUrlQuery query, CancellationToken cancellationToken = default)
 	{
-		var vendorMemberId = vendorMember.ConvertToGameProviderMember(query.OperatorId, query.PlayerCode);
+		var vendorMemberId = vendorMember.ConvertToGameProviderMember(query.BrandCode, query.PlayerCode);
 
 		var platformType = query.IsMobile ? GamePlatformType.Mobile_H5 : GamePlatformType.Desktop;
 

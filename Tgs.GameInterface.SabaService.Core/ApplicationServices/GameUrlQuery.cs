@@ -5,4 +5,5 @@ public record GameUrlQuery(
 	string OperatorId,
 	string VendorId,
 	string PlayerCode,
-	bool IsMobile);
+	bool IsMobile,
+	string BrandCode);

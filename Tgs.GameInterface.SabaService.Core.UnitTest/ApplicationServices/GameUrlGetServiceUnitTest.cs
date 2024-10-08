@@ -17,7 +17,8 @@ public class GameUrlGetServiceUnitTest
 			OperatorId: "tg",
 			VendorId: "um5vspnzkx",
 			PlayerCode: "4ucmqplxb029",
-			IsMobile: false);
+			IsMobile: false,
+			BrandCode: "uus");
 
 		var vendorMemberId = $"{query.OperatorId}_{query.PlayerCode}_test";
 		_ = fakeGameVendorMember
