@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using RichardSzalay.MockHttp;
 using Tgs.GameInterface.SabaService.Core.Exceptions;
 
-namespace Tgs.GameInterface.SabaService.Core.UnitTest;
+namespace Tgs.GameInterface.SabaService.Core.UnitTests;
 
 public class CreateMemberUnitTest
 {

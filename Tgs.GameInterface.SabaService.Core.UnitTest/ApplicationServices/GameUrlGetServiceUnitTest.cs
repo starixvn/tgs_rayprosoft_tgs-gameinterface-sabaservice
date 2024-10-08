@@ -2,7 +2,7 @@
 using Tgs.GameInterface.SabaService.Core.ApplicationServices;
 using Tgs.GameInterface.SabaService.Core.Models;
 
-namespace Tgs.GameInterface.SabaService.Core.UnitTest.ApplicationServices;
+namespace Tgs.GameInterface.SabaService.Core.UnitTests.ApplicationServices;
 
 public class GameUrlGetServiceUnitTest
 {

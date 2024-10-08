@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 
-namespace Tgs.GameInterface.SabaService.Core.UnitTest;
+namespace Tgs.GameInterface.SabaService.Core.UnitTests;
 
 public class GameVendorMemberUnitTest
 {

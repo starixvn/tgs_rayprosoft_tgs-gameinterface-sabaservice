@@ -1,7 +1,7 @@
 ﻿using NSubstitute;
 using Tgs.GameInterface.SabaService.Core.ApplicationServices;
 
-namespace Tgs.GameInterface.SabaService.Core.UnitTest.ApplicationServices;
+namespace Tgs.GameInterface.SabaService.Core.UnitTests.ApplicationServices;
 
 public class PlayerCreateCommandServiceUnitTest
 {
