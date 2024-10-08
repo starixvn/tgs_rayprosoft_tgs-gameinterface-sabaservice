@@ -20,10 +20,10 @@ public class PlayerCreateCommandServiceUnitTest
 			OddsType: 2,
 			Currency: 20);
 
-		var vendorMemberId = $"{command.OperatorId}_{command.PlayerCode}_test";
+		var vendorMemberId = $"{command.BrandCode}_{command.PlayerCode}_test";
 		_ = fakeGameVendorMember
 			.ConvertToGameProviderMember(
-			   Arg.Is(command.OperatorId),
+			   Arg.Is(command.BrandCode),
 			   Arg.Is(command.PlayerCode))
 			.Returns(vendorMemberId);
 

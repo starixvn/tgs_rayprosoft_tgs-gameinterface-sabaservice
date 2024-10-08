@@ -20,10 +20,10 @@ public class GameUrlGetServiceUnitTest
 			IsMobile: false,
 			BrandCode: "uus");
 
-		var vendorMemberId = $"{query.OperatorId}_{query.PlayerCode}_test";
+		var vendorMemberId = $"{query.BrandCode}_{query.PlayerCode}_test";
 		_ = fakeGameVendorMember
 			.ConvertToGameProviderMember(
-			   Arg.Is(query.OperatorId),
+			   Arg.Is(query.BrandCode),
 			   Arg.Is(query.PlayerCode))
 			.Returns(vendorMemberId);
 
